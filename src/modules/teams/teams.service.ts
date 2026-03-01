@@ -52,8 +52,9 @@ export class TeamService {
     }
 
     const characters = await this.characterRepository.findBy({
-      id: In(characterIds), // Récupère tous les persos d'un coup
+      id: In(characterIds),
     });
+
     if (characters.length !== characterIds.length) {
       throw new BadRequestException('Some characters not found');
     }
@@ -68,10 +69,5 @@ export class TeamService {
     }
 
     await this.characterRepository.save(characters);
-
-    return await this.teamRepository.findOne({
-      where: { id: teamId },
-      relations: ['characters'],
-    });
   }
 }
