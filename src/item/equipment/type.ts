@@ -1,8 +1,8 @@
-import { EquipmentSlotName } from '@app/character/equipment/type';
-import { Statistic } from '@app/character/statistic/type';
-import { HeadTypeName } from './head/type';
-import { ShieldTypeName } from './shield/type';
-import { WeaponTypeName } from './weapon/type';
+import { EquipmentSlotName } from '@src/modules/characters/equipment/types';
+import { Statistic } from '@characters/statistic/type';
+import { HeadTypeName } from './head/types';
+import { ShieldTypeName } from './shield/types';
+import { WeaponTypeName } from './weapon/types';
 
 export type Equipment = {
   slot: EquipmentSlotName;

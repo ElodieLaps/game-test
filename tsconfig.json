@@ -22,7 +22,17 @@
     "strictBindCallApply": false,
     "noFallthroughCasesInSwitch": false,
     "paths": {
-      "@app/*": ["src/*"]
+      "@src/*": ["src/*"],
+      "@app/*": ["src/app/*"],
+      "@common/*": ["src/common/*"],
+      "@decorators/*": ["src/common/decorators/*"],
+      "@guards/*": ["src/common/guards"],
+      "@interceptors/*": ["src/common/interceptors"],
+      "@modules": ["src/modules"],
+      "@auth/*": ["src/modules/auth/*"],
+      "@characters/*": ["src/modules/characters/*"],
+      "@teams/*": ["src/modules/teams/*"],
+      "@users/*": ["src/modules/users/*"]
     }
   }
 }

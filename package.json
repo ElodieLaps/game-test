@@ -77,7 +77,20 @@
       "**/*.(t|j)s"
     ],
     "coverageDirectory": "../coverage",
-    "testEnvironment": "node"
+    "testEnvironment": "node",
+     "moduleNameMapper": {
+      "^@src/(.*)$": "<rootDir>/$1",
+      "^@app/(.*)$": "<rootDir>/app/$1",
+      "^@common/(.*)$": "<rootDir>/common/$1",
+      "^@decorators/(.*)$": "<rootDir>/common/decorators/$1",
+      "^@guards/(.*)$": "<rootDir>/common/guards/$1",
+      "^@interceptors/(.*)$": "<rootDir>/common/interceptors/$1",
+      "^@modules/(.*)$": "<rootDir>/modules/$1",
+      "^@auth/(.*)$": "<rootDir>/modules/auth/$1",
+      "^@characters/(.*)$": "<rootDir>/modules/characters/$1",
+      "^@teams/(.*)$": "<rootDir>/modules/teams/$1",
+      "^@users/(.*)$": "<rootDir>/modules/users/$1"
+    }
   },
   "pnpm": {
     "overrides": {
