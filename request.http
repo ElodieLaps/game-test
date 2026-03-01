@@ -1,0 +1,111 @@
+### health check ###
+GET http://localhost:3000/
+
+### USER ###
+### all users
+GET http://localhost:3000/user/all
+
+### user by id    
+GET http://localhost:3000/user/e63006d1-c08c-400f-97e5-e331291a27ca
+
+### create user
+POST http://localhost:3000/user
+Content-Type: application/json
+
+{   
+    "name": "Dédé",
+    "password": "78988",
+    "email": "graid@example.com"
+}
+
+### AUTH ###
+### Login
+POST http://localhost:3000/login
+Content-Type: application/json
+
+{   
+    "name": "Dédé",
+    "password": "78988"
+}
+### User ###
+GET http://localhost:3000/user
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY0OTY4M2ViLWYwZDUtNGZjNC1hMTA1LTcyODQ0MzMyNWE3YyIsImlhdCI6MTc3MjIwMzQ3MCwiZXhwIjoxNzcyMjA3MDcwfQ.5QI8NML_O5lz87sjkuoXRzF0QahUZAtqjZVfN7GDbkw
+
+### CHARACTER ###
+### create character    
+POST http://localhost:3000/character
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY0OTY4M2ViLWYwZDUtNGZjNC1hMTA1LTcyODQ0MzMyNWE3YyIsImlhdCI6MTc3MjMyMzI3NSwiZXhwIjoxNzcyMzI2ODc1fQ.hBCjYP1gMHyXGyMpFDeaOEbiVX6VOOi6oRvrO7viagc
+Content-Type: application/json
+
+{
+    "name": "Julie",
+    "race": "KIRIN",
+    "role": "MAGE",
+    "gender": "FEMALE",
+    "userId": "649683eb-f0d5-4fc4-a105-728443325a7c"
+}
+
+### get all characters
+GET http://localhost:3000/character    
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY0OTY4M2ViLWYwZDUtNGZjNC1hMTA1LTcyODQ0MzMyNWE3YyIsImlhdCI6MTc3MjMyMzI3NSwiZXhwIjoxNzcyMzI2ODc1fQ.hBCjYP1gMHyXGyMpFDeaOEbiVX6VOOi6oRvrO7viagc
+
+
+### get character by id
+GET http://localhost:3000/character/f3d7591d-59b0-48a8-aed1-bd73a99cf47d
+
+### add character equipments
+PUT http://localhost:3000/character/f3d7591d-59b0-48a8-aed1-bd73a99cf47d/equipments/add
+Content-Type: application/json
+
+[
+    {
+        "slot": "WEAPON",
+        "weaponTypeName": "STAFF",
+        "name": "Wooden Staff",
+        "statistics": [
+            { "name": "POWER", "value": 3 }
+        ]
+    },
+    {
+        "slot": "SHIELD",
+        "weaponTypeName": "SWORD",
+        "name": "Wooden Shield",
+        "statistics": [
+            { "name": "STRENGTH", "value": 3 }
+        ]
+    }
+]
+
+### remove character equipments
+PUT http://localhost:3000/character/f3d7591d-59b0-48a8-aed1-bd73a99cf47d/equipments/remove
+Content-Type: application/json
+
+[
+    "HEAD",
+    "SHIELD"
+]
+
+### remove all character equipments
+PUT http://localhost:3000/character/f3d7591d-59b0-48a8-aed1-bd73a99cf47d/equipments/remove/all 
+
+### TEAM ###
+### create team
+POST http://localhost:3000/team
+Content-Type: application/json  
+
+{
+    "name": "Les Bests",
+    "userId": "649683eb-f0d5-4fc4-a105-728443325a7c"
+}
+
+### get user teams
+GET http://localhost:3000/team/649683eb-f0d5-4fc4-a105-728443325a7c
+
+### add characters to team
+PUT http://localhost:3000/team/aa48f96b-e4ea-4b9f-b360-f8c175499a5f/addCharacters
+Content-Type: application/json  
+
+[
+    "d0ee8d51-f6e1-4f26-97ff-1dabc1afbbc1",
+    "65568877-2763-45de-9465-4fb46cd0a2cd"
+]
