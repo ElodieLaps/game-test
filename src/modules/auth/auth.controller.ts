@@ -1,5 +1,4 @@
 import { AuthGuard } from '@auth/auth.guard';
-import { AuthInterceptor } from '@auth/auth.interceptor';
 import { AuthService } from '@auth/auth.service';
 import {
   Body,
@@ -10,6 +9,7 @@ import {
   UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
+import { RequestTimingInterceptor } from '@src/common/interceptors/requestTiming.interceptor';
 import { User } from '@users/user.entity';
 import type { AuthBodyDto } from './authBodyDto';
 
@@ -18,7 +18,7 @@ export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
   @Post('login')
-  @UseInterceptors(AuthInterceptor)
+  @UseInterceptors(RequestTimingInterceptor)
   async getAuth(
     @Body() authBody: AuthBodyDto,
   ): Promise<{ access_token: string }> {

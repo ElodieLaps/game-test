@@ -1,5 +1,5 @@
 import { AuthGuard } from '@auth/auth.guard';
-import { CharacterInterceptor } from '@characters/character.interceptor';
+import { CharacterInterceptor } from '@src/modules/characters/characters.interceptor';
 import { CharacterBodyDto } from '@characters/characterBodyDto';
 import { CharacterService } from '@characters/characters.service';
 import {
