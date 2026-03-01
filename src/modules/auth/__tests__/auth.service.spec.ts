@@ -6,7 +6,6 @@ import { UnauthorizedException, NotFoundException } from '@nestjs/common';
 import { compare } from 'bcrypt';
 import { AuthBodyDto } from '@auth/authBodyDto';
 
-// Mock bcrypt
 jest.mock('bcrypt');
 
 describe('AuthService', () => {
@@ -15,7 +14,6 @@ describe('AuthService', () => {
   let jwtService: Record<keyof JwtService, jest.Mock>;
 
   beforeEach(async () => {
-    // Création de mocks DRY et sûrs
     userService = {
       getUserByName: jest.fn(),
       getUserById: jest.fn(),
