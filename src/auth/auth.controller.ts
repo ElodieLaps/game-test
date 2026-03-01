@@ -7,7 +7,7 @@ import {
   UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
-import { User } from 'src/user/user.entity';
+import { User } from '@app/user/user.entity';
 import type { AuthBodyDto } from './auth.body.dto';
 import { AuthGuard } from './auth.guard';
 import { AuthService } from './auth.service';

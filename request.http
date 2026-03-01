@@ -15,7 +15,7 @@ Content-Type: application/json
 {   
     "name": "Dédé",
     "password": "78988",
-    "email": "graid@example.com"
+    "email": "graiod@example.com"
 }
 
 ### AUTH ###
@@ -34,21 +34,24 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY0OTY4M2ViL
 ### CHARACTER ###
 ### create character    
 POST http://localhost:3000/character
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY0OTY4M2ViLWYwZDUtNGZjNC1hMTA1LTcyODQ0MzMyNWE3YyIsImlhdCI6MTc3MjMyMzI3NSwiZXhwIjoxNzcyMzI2ODc1fQ.hBCjYP1gMHyXGyMpFDeaOEbiVX6VOOi6oRvrO7viagc
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY0OTY4M2ViLWYwZDUtNGZjNC1hMTA1LTcyODQ0MzMyNWE3YyIsImlhdCI6MTc3MjM4MjY4OCwiZXhwIjoxNzcyMzg2Mjg4fQ.oQAcWHn9sEm5vkzpdgP3L1S3wlmFOzIu8dtN3P9_U0I
 Content-Type: application/json
 
 {
-    "name": "Julie",
+    "name": "Pierrot",
     "race": "KIRIN",
-    "role": "MAGE",
+    "role": "ROGUE",
     "gender": "FEMALE",
     "userId": "649683eb-f0d5-4fc4-a105-728443325a7c"
 }
 
+### delete character
+DELETE http://localhost:3000/character/2fe95315-5811-432e-a55c-ab2b622e8890
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY0OTY4M2ViLWYwZDUtNGZjNC1hMTA1LTcyODQ0MzMyNWE3YyIsImlhdCI6MTc3MjM4MjY4OCwiZXhwIjoxNzcyMzg2Mjg4fQ.oQAcWHn9sEm5vkzpdgP3L1S3wlmFOzIu8dtN3P9_U0I
+
 ### get all characters
 GET http://localhost:3000/character    
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY0OTY4M2ViLWYwZDUtNGZjNC1hMTA1LTcyODQ0MzMyNWE3YyIsImlhdCI6MTc3MjMyMzI3NSwiZXhwIjoxNzcyMzI2ODc1fQ.hBCjYP1gMHyXGyMpFDeaOEbiVX6VOOi6oRvrO7viagc
-
 
 ### get character by id
 GET http://localhost:3000/character/f3d7591d-59b0-48a8-aed1-bd73a99cf47d
@@ -86,7 +89,7 @@ Content-Type: application/json
 ]
 
 ### remove all character equipments
-PUT http://localhost:3000/character/f3d7591d-59b0-48a8-aed1-bd73a99cf47d/equipments/remove/all 
+PUT http://localhost:3000/character/f3d7591d-59b0-48a8-aed1-bd73a99cf47d/equipments/removeAll 
 
 ### TEAM ###
 ### create team
