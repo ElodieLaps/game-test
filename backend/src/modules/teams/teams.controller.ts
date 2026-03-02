@@ -10,7 +10,7 @@ import {
 } from '@nestjs/common';
 import { TeamBodyDto } from '@src/modules/teams/team.body.dto';
 import { Team } from '@teams/team.entity';
-import { TeamService } from '@teams/teams.service';
+import { TeamService } from '@src/modules/teams/teams.service';
 import { CurrentUser } from '@users/currentUser.decorator';
 import { User } from '../users/user.entity';
 

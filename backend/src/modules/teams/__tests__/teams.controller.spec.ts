@@ -1,7 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { User } from '@src/modules/users/user.entity';
 import { Team } from '@teams/team.entity';
-import { TeamService } from '@teams/teams.service';
+import { TeamService } from '@src/modules/teams/teams.service';
 import { TeamController } from '../teams.controller';
 import { TeamBodyDto } from '../team.body.dto';
 import { AuthGuard } from '@src/modules/auth/auth.guard';

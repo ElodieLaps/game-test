@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { TeamService } from '@teams/teams.service';
+import { TeamService } from '@src/modules/teams/teams.service';
 import { hash } from 'bcrypt';
 import { Repository } from 'typeorm';
 import { User } from './user.entity';
@@ -55,9 +55,8 @@ export class UserService {
       });
       const savedUser = await this.userRepository.save(user);
 
-      await this.teamService.createTeam({
+      await this.teamService.createTeam(savedUser.id, {
         name: 'My Team',
-        userId: savedUser.id,
       });
     } catch (error) {
       throw new Error('Error creating user', error);

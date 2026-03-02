@@ -1,6 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { UserService } from '@users/users.service';
-import { TeamService } from '@teams/teams.service';
+import { TeamService } from '@src/modules/teams/teams.service';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { User } from '@users/user.entity';
 import { Repository } from 'typeorm';
@@ -132,9 +132,8 @@ describe('UserService', () => {
         password: 'hashed',
       });
       expect(mockRepo.save).toHaveBeenCalledWith(user);
-      expect(mockTeamService.createTeam).toHaveBeenCalledWith({
+      expect(mockTeamService.createTeam).toHaveBeenCalledWith('1', {
         name: 'My Team',
-        userId: '1',
       });
     });
   });

@@ -1,12 +1,12 @@
+import { Character } from '@characters/character.entity';
+import { BadRequestException, NotFoundException } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
-import { Team } from '@teams/team.entity';
-import { Character } from '@characters/character.entity';
-import { TeamService } from '@teams/teams.service';
-import { Repository } from 'typeorm';
-import { BadRequestException, NotFoundException } from '@nestjs/common';
 import { CharacterService } from '@src/modules/characters/characters.service';
 import { User } from '@src/modules/users/user.entity';
+import { Team } from '@teams/team.entity';
+import { TeamService } from '@src/modules/teams/teams.service';
+import { Repository } from 'typeorm';
 
 describe('TeamService', () => {
   let service: TeamService;

@@ -6,10 +6,11 @@ import { User } from '@users/user.entity';
 import { Team } from './team.entity';
 import { TeamController } from './teams.controller';
 import { TeamService } from './teams.service';
+import { JwtService } from '@nestjs/jwt';
 
 @Module({
   imports: [TypeOrmModule.forFeature([Team, Character, User])],
   controllers: [TeamController],
-  providers: [TeamService, CharacterService],
+  providers: [TeamService, CharacterService, JwtService],
 })
 export class TeamModule {}

@@ -5,7 +5,7 @@ import { Module } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Team } from '@teams/team.entity';
-import { TeamService } from '@teams/teams.service';
+import { TeamService } from '@src/modules/teams/teams.service';
 import { User } from '@users/user.entity';
 import { UserService } from '@users/users.service';
 
