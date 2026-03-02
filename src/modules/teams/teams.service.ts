@@ -6,7 +6,7 @@ import {
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Team } from '@teams/team.entity';
-import { TeamBodyDto } from '@teams/teamBodyDto';
+import { TeamBodyDto } from '@src/modules/teams/team.body.dto';
 import { In, Repository } from 'typeorm';
 
 @Injectable()
@@ -18,11 +18,11 @@ export class TeamService {
     private readonly characterRepository: Repository<Character>,
   ) {}
 
-  async createTeam(team: TeamBodyDto) {
+  async createTeam(userId: string, team: TeamBodyDto) {
     try {
       const newTeam = this.teamRepository.create({
         name: team.name,
-        userId: team.userId,
+        userId,
         characters: [],
       });
 
@@ -32,7 +32,7 @@ export class TeamService {
     }
   }
 
-  async getUserTeams(userId: string): Promise<Team[]> {
+  async getTeams(userId: string): Promise<Team[]> {
     try {
       return await this.teamRepository.find({
         where: { userId },
@@ -43,9 +43,9 @@ export class TeamService {
     }
   }
 
-  async addCharactersToTeam(teamId: string, characterIds: string[]) {
+  async addCharacters(userId: string, teamId: string, characterIds: string[]) {
     const team = await this.teamRepository.findOne({
-      where: { id: teamId },
+      where: { id: teamId, userId },
     });
     if (!team) {
       throw new NotFoundException('Team not found');

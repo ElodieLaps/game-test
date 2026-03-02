@@ -1,4 +1,4 @@
-import { AuthBodyDto } from '@auth/authBodyDto';
+import { AuthBodyDto } from '@src/modules/auth/auth.body.dto';
 import {
   Injectable,
   NotFoundException,

@@ -1,5 +1,5 @@
 import { Character } from '@characters/character.entity';
-import { CharacterBodyDto } from '@characters/characterBodyDto';
+import { CharacterBodyDto } from '@src/modules/characters/character.body.dto';
 import {
   BadRequestException,
   Injectable,
@@ -31,17 +31,11 @@ export class CharacterService {
   }
 
   async getCharacterById(id: string): Promise<Character> {
-    try {
-      const character = await this.characterRepository.findOneBy({ id });
+    const character = await this.characterRepository.findOneBy({ id });
 
-      if (!character) throw new NotFoundException('Character not found');
+    if (!character) throw new NotFoundException('Character not found');
 
-      return character;
-    } catch (error) {
-      throw new Error(
-        'Error getting character by id: ' + error.message || error,
-      );
-    }
+    return character;
   }
 
   // WRITING

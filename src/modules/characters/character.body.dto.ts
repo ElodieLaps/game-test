@@ -1,7 +1,7 @@
 import { IsNotEmpty, IsString } from 'class-validator';
-import type { GenderName } from './gender/type';
-import type { RaceName } from './race/type';
-import type { RoleName } from './role/type';
+import type { GenderName } from './genders/types';
+import type { RaceName } from './races/types';
+import type { RoleName } from './roles/types';
 
 export class CharacterBodyDto {
   @IsString()
@@ -19,8 +19,4 @@ export class CharacterBodyDto {
   @IsString()
   @IsNotEmpty()
   role: RoleName;
-
-  @IsString()
-  @IsNotEmpty()
-  userId: string;
 }

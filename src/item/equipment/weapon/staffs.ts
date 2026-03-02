@@ -1,5 +1,5 @@
 import { equipmentSlotName } from '@src/modules/characters/equipment/types';
-import { StatisticNames } from '@characters/statistic/type';
+import { StatisticNames } from '@src/modules/characters/statistics/types';
 import { Equipment } from '../type';
 import { WeaponTypeNames } from './types';
 

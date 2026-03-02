@@ -5,11 +5,21 @@ import { Character } from '@characters/character.entity';
 import { TeamService } from '@teams/teams.service';
 import { Repository } from 'typeorm';
 import { BadRequestException, NotFoundException } from '@nestjs/common';
+import { CharacterService } from '@src/modules/characters/characters.service';
+import { User } from '@src/modules/users/user.entity';
 
 describe('TeamService', () => {
   let service: TeamService;
   let teamRepo: Repository<Team>;
   let charRepo: Repository<Character>;
+
+  const mockUser: User = {
+    id: 'user-1',
+    name: 'John',
+    email: 'test@example.com',
+    password: 'hashed',
+    teams: [],
+  };
 
   const mockTeam = {
     id: 'team-1',
@@ -39,6 +49,7 @@ describe('TeamService', () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         TeamService,
+        CharacterService,
         { provide: getRepositoryToken(Team), useValue: mockTeamRepo },
         { provide: getRepositoryToken(Character), useValue: mockCharRepo },
       ],
@@ -58,9 +69,8 @@ describe('TeamService', () => {
       mockTeamRepo.create.mockReturnValue(mockTeam);
       mockTeamRepo.save.mockResolvedValue(mockTeam);
 
-      const result = await service.createTeam({
+      const result = await service.createTeam(mockUser.id, {
         name: 'My Team',
-        userId: 'user-1',
       });
       expect(result).toBeUndefined();
       expect(mockTeamRepo.create).toHaveBeenCalledWith({
@@ -75,7 +85,7 @@ describe('TeamService', () => {
   describe('getUserTeams', () => {
     it('should return all teams for a user', async () => {
       mockTeamRepo.find.mockResolvedValue([mockTeam]);
-      const result = await service.getUserTeams('user-1');
+      const result = await service.getTeams('user-1');
       expect(result).toEqual([mockTeam]);
       expect(mockTeamRepo.find).toHaveBeenCalledWith({
         where: { userId: 'user-1' },
@@ -86,16 +96,12 @@ describe('TeamService', () => {
 
   describe('addCharactersToTeam', () => {
     it('should add characters to a team', async () => {
-      // mock team exists
       mockTeamRepo.findOne.mockResolvedValue(mockTeam);
-      // mock characters exist
       mockCharRepo.findBy.mockResolvedValue(mockCharacters);
-      // mock save resolves
       mockCharRepo.save.mockResolvedValue(mockCharacters);
 
-      await service.addCharactersToTeam('team-1', ['char-1', 'char-2']);
+      await service.addCharacters(mockUser.id, 'team-1', ['char-1', 'char-2']);
 
-      // vérifier que les personnages ont bien été mis à jour
       expect(mockCharRepo.save).toHaveBeenCalledWith(
         expect.arrayContaining([
           { ...mockCharacters[0], teamId: 'team-1' },
@@ -108,7 +114,7 @@ describe('TeamService', () => {
       mockTeamRepo.findOne.mockResolvedValue(null);
 
       await expect(
-        service.addCharactersToTeam('team-1', ['char-1']),
+        service.addCharacters(mockUser.id, 'team-1', ['char-1']),
       ).rejects.toThrow(NotFoundException);
     });
 
@@ -117,7 +123,7 @@ describe('TeamService', () => {
       mockCharRepo.findBy.mockResolvedValue([mockCharacters[0]]); // un seul trouvé
 
       await expect(
-        service.addCharactersToTeam('team-1', ['char-1', 'char-2']),
+        service.addCharacters(mockUser.id, 'team-1', ['char-1', 'char-2']),
       ).rejects.toThrow(BadRequestException);
     });
 
@@ -128,7 +134,7 @@ describe('TeamService', () => {
       ]);
 
       await expect(
-        service.addCharactersToTeam('team-1', ['char-1']),
+        service.addCharacters(mockUser.id, 'team-1', ['char-1']),
       ).rejects.toThrow(BadRequestException);
     });
   });

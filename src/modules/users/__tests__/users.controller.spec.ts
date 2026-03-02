@@ -2,7 +2,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { UserController } from '@users/users.controller';
 import { UserService } from '@users/users.service';
 import { User } from '@users/user.entity';
-import { UserBodyDto } from '@users/userBodyDto';
+import { UserBodyDto } from '@src/modules/users/user.body.dto';
 import { UserInterceptor } from '@users/users.interceptor';
 import { ExecutionContext, CallHandler } from '@nestjs/common';
 import { firstValueFrom, of } from 'rxjs';

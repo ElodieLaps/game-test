@@ -4,7 +4,7 @@ import { TeamService } from '@teams/teams.service';
 import { hash } from 'bcrypt';
 import { Repository } from 'typeorm';
 import { User } from './user.entity';
-import { UserBodyDto } from './userBodyDto';
+import { UserBodyDto } from './user.body.dto';
 
 @Injectable()
 export class UserService {
@@ -29,7 +29,6 @@ export class UserService {
       if (!user) {
         throw new Error('User not found');
       }
-      console.log('User found:', user);
       return user;
     } catch (error) {
       throw new Error('Error getting user by id');

@@ -11,7 +11,7 @@ import {
 } from '@nestjs/common';
 import { RequestTimingInterceptor } from '@src/common/interceptors/requestTiming.interceptor';
 import { User } from '@users/user.entity';
-import type { AuthBodyDto } from './authBodyDto';
+import type { AuthBodyDto } from '@auth/auth.body.dto';
 
 @Controller()
 export class AuthController {

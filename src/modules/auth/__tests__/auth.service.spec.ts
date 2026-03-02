@@ -4,7 +4,7 @@ import { UserService } from '@users/users.service';
 import { JwtService } from '@nestjs/jwt';
 import { UnauthorizedException, NotFoundException } from '@nestjs/common';
 import { compare } from 'bcrypt';
-import { AuthBodyDto } from '@auth/authBodyDto';
+import { AuthBodyDto } from '@src/modules/auth/auth.body.dto';
 
 jest.mock('bcrypt');
 

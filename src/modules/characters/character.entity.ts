@@ -8,11 +8,11 @@ import {
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import type { Equipments } from './equipment/types';
-import type { GenderName } from './gender/type';
-import type { RaceName } from './race/type';
-import type { RoleName } from './role/type';
-import type { Statistics } from './statistic/type';
-import type { StatusName } from './status/type';
+import type { GenderName } from './genders/types';
+import type { RaceName } from './races/types';
+import type { RoleName } from './roles/types';
+import type { Statistics } from './statistics/types';
+import type { StatusName } from './status/types';
 
 @Entity('character')
 export class Character {

@@ -7,7 +7,7 @@ import {
   UseInterceptors,
 } from '@nestjs/common';
 import { User } from '@users/user.entity';
-import { UserBodyDto } from '@users/userBodyDto';
+import { UserBodyDto } from '@src/modules/users/user.body.dto';
 import { UserInterceptor } from '@users/users.interceptor';
 import { UserService } from '@users/users.service';
 

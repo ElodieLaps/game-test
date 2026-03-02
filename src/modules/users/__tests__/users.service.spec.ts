@@ -4,7 +4,7 @@ import { TeamService } from '@teams/teams.service';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { User } from '@users/user.entity';
 import { Repository } from 'typeorm';
-import { UserBodyDto } from '@users/userBodyDto';
+import { UserBodyDto } from '@src/modules/users/user.body.dto';
 import * as bcrypt from 'bcrypt';
 
 jest.mock('bcrypt');

@@ -1,27 +1,42 @@
-import { Body, Controller, Get, Param, Post, Put } from '@nestjs/common';
+import { AuthGuard } from '@auth/auth.guard';
+import {
+  Body,
+  Controller,
+  Get,
+  Param,
+  Post,
+  Put,
+  UseGuards,
+} from '@nestjs/common';
+import { TeamBodyDto } from '@src/modules/teams/team.body.dto';
 import { Team } from '@teams/team.entity';
-import { TeamBodyDto } from '@teams/teamBodyDto';
 import { TeamService } from '@teams/teams.service';
+import { CurrentUser } from '@users/currentUser.decorator';
+import { User } from '../users/user.entity';
 
 @Controller('team')
 export class TeamController {
   constructor(private readonly teamService: TeamService) {}
 
   @Post()
-  async createTeam(@Body() team: TeamBodyDto) {
-    return await this.teamService.createTeam(team);
+  @UseGuards(AuthGuard)
+  async createTeam(@CurrentUser() user: User, @Body() team: TeamBodyDto) {
+    await this.teamService.createTeam(user.id, team);
   }
 
   @Get(':userId')
-  async getUserTeams(@Param('userId') userId: string): Promise<Team[]> {
-    return await this.teamService.getUserTeams(userId);
+  @UseGuards(AuthGuard)
+  async getTeams(@Param('userId') userId: string): Promise<Team[]> {
+    return await this.teamService.getTeams(userId);
   }
 
   @Put(':teamId/addCharacters')
-  async addCharactersToTeam(
+  @UseGuards(AuthGuard)
+  async addCharacters(
+    @CurrentUser() user: User,
     @Param('teamId') teamId: string,
     @Body() characterIds: string[],
   ) {
-    return await this.teamService.addCharactersToTeam(teamId, characterIds);
+    await this.teamService.addCharacters(user.id, teamId, characterIds);
   }
 }

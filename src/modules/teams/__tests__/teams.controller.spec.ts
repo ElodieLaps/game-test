@@ -1,113 +1,97 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { getRepositoryToken } from '@nestjs/typeorm';
-import { Character } from '@characters/character.entity';
-import { CharacterService } from '@characters/characters.service';
-import { Repository } from 'typeorm';
+import { User } from '@src/modules/users/user.entity';
+import { Team } from '@teams/team.entity';
+import { TeamService } from '@teams/teams.service';
+import { TeamController } from '../teams.controller';
+import { TeamBodyDto } from '../team.body.dto';
+import { AuthGuard } from '@src/modules/auth/auth.guard';
 
-describe('CharacterService', () => {
-  let service: CharacterService;
-  let repo: Repository<Character>;
+describe('TeamController', () => {
+  let controller: TeamController;
+  let service: jest.Mocked<TeamService>;
 
-  const mockCharacters = [
-    {
-      id: 'd0ee8d51-f6e1-4f26-97ff-1dabc1afbbc1',
-      name: 'Hugo',
-      gender: 'MALE' as const,
-      userId: '649683eb-f0d5-4fc4-a105-728443325a7c',
-      teamId: 'aa48f96b-e4ea-4b9f-b360-f8c175499a5f',
-      level: 1,
-      race: 'HUMAN' as const,
-      role: 'PRIEST' as const,
-      statuses: [],
-      statistics: {
-        HEALTH: { value: 100, currentValue: 100, progressIndex: 5 },
-      },
-      equipments: {
-        WEAPON: {
-          name: 'Wooden Staff',
-          slot: 'WEAPON',
-          typeName: 'STAFF',
-          statistics: [{ name: 'POWER', value: 3 }],
-        },
-      },
-      user: { id: '649683eb-f0d5-4fc4-a105-728443325a7c' },
-      team: { id: 'aa48f96b-e4ea-4b9f-b360-f8c175499a5f' },
-    },
-    {
-      id: '65568877-2763-45de-9465-4fb46cd0a2cd',
-      name: 'Lily',
-      gender: 'FEMALE' as const,
-      userId: '649683eb-f0d5-4fc4-a105-728443325a7c',
-      teamId: 'aa48f96b-e4ea-4b9f-b360-f8c175499a5f',
-      level: 1,
-      race: 'KIRIN' as const,
-      role: 'MAGE' as const,
-      statuses: [],
-      statistics: { HEALTH: { value: 85, currentValue: 85, progressIndex: 4 } },
-      equipments: {
-        WEAPON: {
-          name: 'Wooden Staff',
-          slot: 'WEAPON',
-          typeName: 'STAFF',
-          statistics: [{ name: 'POWER', value: 3 }],
-        },
-      },
-      user: { id: '649683eb-f0d5-4fc4-a105-728443325a7c' },
-      team: { id: 'aa48f96b-e4ea-4b9f-b360-f8c175499a5f' },
-    },
-  ];
+  const mockUser: User = {
+    id: 'user-1',
+    name: 'John',
+    email: 'test@example.com',
+    password: 'hashed',
+    teams: [],
+  };
 
-  const mockRepo = {
-    find: jest.fn(),
-    findOneBy: jest.fn(),
-    save: jest.fn(),
-    create: jest.fn(),
+  const mockTeam = {
+    id: 'team-1',
+    name: 'My Team',
+    userId: 'user-1',
+    characters: [],
+    user: mockUser,
+  } as Team;
+
+  const mockTeamService = {
+    createTeam: jest.fn(),
+    getTeams: jest.fn(),
+    addCharacters: jest.fn(),
   };
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
+      controllers: [TeamController],
       providers: [
-        CharacterService,
-        { provide: getRepositoryToken(Character), useValue: mockRepo },
+        {
+          provide: TeamService,
+          useValue: mockTeamService,
+        },
       ],
-    }).compile();
+    })
+      .overrideGuard(AuthGuard)
+      .useValue({ canActivate: jest.fn(() => true) })
+      .compile();
 
-    service = module.get<CharacterService>(CharacterService);
-    repo = module.get<Repository<Character>>(getRepositoryToken(Character));
+    controller = module.get<TeamController>(TeamController);
+    service = module.get(TeamService);
   });
 
   it('should be defined', () => {
-    expect(service).toBeDefined();
+    expect(controller).toBeDefined();
   });
 
-  describe('getAllCharacters', () => {
-    it('should return all characters for a user', async () => {
-      const userId = 'user-1';
-      mockRepo.find.mockResolvedValue(
-        mockCharacters.filter((c) => c.userId === userId),
+  describe('createTeam', () => {
+    it('should call TeamService.createTeam', async () => {
+      const dto = { name: 'My Team', userId: 'user-1' } as TeamBodyDto;
+
+      service.createTeam.mockResolvedValue(undefined);
+
+      const result = await controller.createTeam(mockUser, dto);
+
+      expect(service.createTeam).toHaveBeenCalledWith(mockUser.id, dto);
+      expect(result).toBeUndefined();
+    });
+  });
+
+  describe('getUserTeams', () => {
+    it('should return teams for a given user', async () => {
+      service.getTeams.mockResolvedValue([mockTeam]);
+
+      const result = await controller.getTeams('user-1');
+
+      expect(service.getTeams).toHaveBeenCalledWith('user-1');
+      expect(result).toEqual([mockTeam]);
+    });
+  });
+
+  describe('addCharacters', () => {
+    it('should call TeamService.addCharacters', async () => {
+      service.addCharacters.mockResolvedValue(undefined);
+
+      const result = await controller.addCharacters(mockUser, 'team-1', [
+        'char-1',
+      ]);
+
+      expect(service.addCharacters).toHaveBeenCalledWith(
+        mockUser.id,
+        'team-1',
+        ['char-1'],
       );
-
-      const result = await service.getAllCharacters(userId);
-      expect(result).toEqual(mockCharacters.filter((c) => c.userId === userId));
-      expect(mockRepo.find).toHaveBeenCalled();
-    });
-  });
-
-  describe('getCharacterById', () => {
-    it('should return a character if found', async () => {
-      mockRepo.findOneBy.mockResolvedValue(mockCharacters[0]);
-
-      const result = await service.getCharacterById(mockCharacters[0].id);
-      expect(result).toEqual(mockCharacters[0]);
-      expect(mockRepo.findOneBy).toHaveBeenCalledWith({
-        id: mockCharacters[0].id,
-      });
-    });
-
-    it('should throw an error if character not found', async () => {
-      mockRepo.findOneBy.mockResolvedValue(null);
-
-      await expect(service.getCharacterById('unknown-id')).rejects.toThrow();
+      expect(result).toBeUndefined();
     });
   });
 });

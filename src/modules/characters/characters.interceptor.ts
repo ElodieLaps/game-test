@@ -9,8 +9,8 @@ import {
 } from '@nestjs/common';
 import { Observable } from 'rxjs';
 import { getStarterEquipment } from './equipment/utils';
-import type { RoleName } from './role/type';
-import statistics from './statistic/statistics';
+import type { RoleName } from './roles/types';
+import statistics from './statistics';
 
 @Injectable()
 export class CharacterInterceptor implements NestInterceptor {
