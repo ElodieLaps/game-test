@@ -4,14 +4,12 @@ import {
   Get,
   Param,
   Post,
-  UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
-import { User } from '@users/user.entity';
 import { UserBodyDto } from '@src/modules/users/user.body.dto';
+import { User } from '@users/user.entity';
 import { UserInterceptor } from '@users/users.interceptor';
 import { UserService } from '@users/users.service';
-import { AuthGuard } from '../auth/auth.guard';
 
 @Controller('user')
 export class UserController {

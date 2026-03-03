@@ -17,10 +17,10 @@ export class AuthService {
   ) {}
 
   async login({
-    name,
+    email,
     password,
   }: AuthBodyDto): Promise<{ access_token: string }> {
-    const user = await this.userService.getUserByName(name);
+    const user = await this.userService.getUserByEmail(email);
 
     if (!user)
       throw new UnauthorizedException('User name or password is incorrect');

@@ -15,7 +15,7 @@ describe('AuthService', () => {
 
   beforeEach(async () => {
     userService = {
-      getUserByName: jest.fn(),
+      getUserByEmail: jest.fn(),
       getUserById: jest.fn(),
     } as Record<keyof UserService, jest.Mock>;
 
@@ -39,7 +39,7 @@ describe('AuthService', () => {
   });
 
   describe('login', () => {
-    const dto: AuthBodyDto = { name: 'test', password: 'secret' };
+    const dto: AuthBodyDto = { email: 'test', password: 'secret' };
     const user = {
       id: '1',
       name: 'test',
@@ -49,19 +49,19 @@ describe('AuthService', () => {
     };
 
     it('should throw UnauthorizedException if user does not exist', async () => {
-      userService.getUserByName.mockResolvedValue(null);
+      userService.getUserByEmail.mockResolvedValue(null);
       await expect(service.login(dto)).rejects.toThrow(UnauthorizedException);
     });
 
     it('should throw UnauthorizedException if password is invalid', async () => {
-      userService.getUserByName.mockResolvedValue(user);
+      userService.getUserByEmail.mockResolvedValue(user);
       (compare as jest.Mock).mockResolvedValue(false);
 
       await expect(service.login(dto)).rejects.toThrow(UnauthorizedException);
     });
 
     it('should return access_token if credentials are valid', async () => {
-      userService.getUserByName.mockResolvedValue(user);
+      userService.getUserByEmail.mockResolvedValue(user);
       (compare as jest.Mock).mockResolvedValue(true);
       jwtService.sign.mockReturnValue('token');
 

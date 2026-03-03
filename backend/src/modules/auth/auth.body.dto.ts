@@ -3,7 +3,7 @@ import { IsNotEmpty, IsString } from 'class-validator';
 export class AuthBodyDto {
   @IsNotEmpty()
   @IsString()
-  name: string;
+  email: string;
 
   @IsNotEmpty()
   password: string;

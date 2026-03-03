@@ -6,6 +6,7 @@ import { User } from '@users/user.entity';
 import { Repository } from 'typeorm';
 import { UserBodyDto } from '@src/modules/users/user.body.dto';
 import * as bcrypt from 'bcrypt';
+import { ConflictException } from '@nestjs/common';
 
 jest.mock('bcrypt');
 
@@ -16,6 +17,7 @@ describe('UserService', () => {
 
   const mockRepo = {
     find: jest.fn(),
+    findOne: jest.fn(),
     findOneBy: jest.fn(),
     create: jest.fn(),
     save: jest.fn(),
@@ -112,6 +114,27 @@ describe('UserService', () => {
     });
   });
 
+  describe('getUserByEmail', () => {
+    it('should return user when found', async () => {
+      const user = { id: '1', name: 'Alice', email: 'a@b.com' };
+
+      mockRepo.findOneBy.mockResolvedValue(user);
+
+      const result = await service.getUserByEmail('a@b.com');
+
+      expect(mockRepo.findOneBy).toHaveBeenCalledWith({ email: 'a@b.com' });
+      expect(result).toEqual(user);
+    });
+
+    it('should throw when user not found', async () => {
+      mockRepo.findOneBy.mockResolvedValue(null);
+
+      await expect(service.getUserByEmail('notfound@b.com')).rejects.toThrow(
+        'Error getting user by email',
+      );
+    });
+  });
+
   describe('createUser', () => {
     it('should hash password, save user and create a team', async () => {
       const dto: UserBodyDto = {
@@ -135,6 +158,18 @@ describe('UserService', () => {
       expect(mockTeamService.createTeam).toHaveBeenCalledWith('1', {
         name: 'My Team',
       });
+    });
+
+    it('should throw ConflictException if email already exists', async () => {
+      const dto: UserBodyDto = {
+        name: 'Alice',
+        email: 'a@b.com',
+        password: 'secret',
+      };
+
+      mockRepo.findOne.mockResolvedValue({ id: '1', ...dto });
+
+      await expect(service.createUser(dto)).rejects.toThrow(ConflictException);
     });
   });
 });

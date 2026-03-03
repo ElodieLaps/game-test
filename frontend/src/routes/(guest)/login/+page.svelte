@@ -5,7 +5,7 @@
 <h1>Login</h1>
 
 <form method="POST" action="?/login">
-	<input name="name" type="name" placeholder="name" required />
+	<input name="email" type="email" placeholder="email" required />
 	<input name="password" type="password" placeholder="Password" required />
 	<button type="submit">Se connecter</button>
 </form>

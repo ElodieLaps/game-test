@@ -1,4 +1,8 @@
-import { Injectable } from '@nestjs/common';
+import {
+  ConflictException,
+  Injectable,
+  InternalServerErrorException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { TeamService } from '@src/modules/teams/teams.service';
 import { hash } from 'bcrypt';
@@ -47,7 +51,29 @@ export class UserService {
     }
   }
 
+  async getUserByEmail(email: string): Promise<User> {
+    try {
+      const user = await this.userRepository.findOneBy({ email });
+      if (!user) {
+        throw new Error('User not found');
+      }
+      return user;
+    } catch (error) {
+      throw new Error('Error getting user by email');
+    }
+  }
+
   async createUser(userBodyDto: UserBodyDto) {
+    const existingUser = await this.userRepository.findOne({
+      where: { email: userBodyDto.email },
+    });
+
+    if (existingUser) {
+      throw new ConflictException(
+        'An account with this email is already exist',
+      );
+    }
+
     try {
       const user = this.userRepository.create({
         ...userBodyDto,
@@ -58,8 +84,12 @@ export class UserService {
       await this.teamService.createTeam(savedUser.id, {
         name: 'My Team',
       });
+
+      return savedUser;
     } catch (error) {
-      throw new Error('Error creating user' + error);
+      throw new InternalServerErrorException(
+        'Erreur lors de la création du compte',
+      );
     }
   }
 
