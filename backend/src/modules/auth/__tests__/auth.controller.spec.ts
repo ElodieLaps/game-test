@@ -45,12 +45,10 @@ describe('AuthController', () => {
   });
 
   it('should return access token', async () => {
-  jest
-    .spyOn(service, 'login')
-    .mockResolvedValue({ access_token: 'token' });
+    jest.spyOn(service, 'login').mockResolvedValue({ access_token: 'token' });
 
-  const result = await controller.getAuth({ name: 'a', password: 'b' });
+    const result = await controller.getAuth({ name: 'a', password: 'b' });
 
-  expect(result).toEqual({ access_token: 'token' });
-});
+    expect(result).toEqual({ token: 'token' });
+  });
 });

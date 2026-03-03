@@ -59,7 +59,7 @@ export class UserService {
         name: 'My Team',
       });
     } catch (error) {
-      throw new Error('Error creating user', error);
+      throw new Error('Error creating user' + error);
     }
   }
 

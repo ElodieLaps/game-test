@@ -28,7 +28,9 @@ export class Character {
   @Column()
   userId: string;
 
-  @ManyToOne(() => User, (user) => user.teams)
+  @ManyToOne(() => User, (user) => user.teams, {
+    onDelete: 'CASCADE',
+  })
   @JoinColumn({ name: 'userId' })
   user: User;
 
