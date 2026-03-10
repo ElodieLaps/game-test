@@ -1,4 +1,4 @@
-import { RoleName } from '../roles/types';
+import { RoleName } from '@shared/types';
 import { magicalStarterEquipment } from './magicalStarterEquipment';
 import { physicalStarterEquipment } from './physicalStarterEquipment';
 

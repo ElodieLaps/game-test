@@ -1,5 +1,5 @@
+import { StatisticNames } from '@shared/types';
 import { equipmentSlotName } from '@src/modules/characters/equipment/types';
-import { StatisticNames } from '@src/modules/characters/statistics/types';
 import { Equipment } from '../type';
 import { HeadTypeNames } from './types';
 

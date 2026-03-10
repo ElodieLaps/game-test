@@ -1,4 +1,4 @@
-import { RaceName } from '../races/types';
+import { RaceName } from '@shared/types';
 import DWARF from './data/dwarf';
 import ELF from './data/elf';
 import HUMAN from './data/human';

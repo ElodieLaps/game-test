@@ -24,8 +24,8 @@ import { AppService } from './app.service';
         username: configService.get<string>('DB_USER'),
         password: configService.get<string>('DB_PASSWORD'),
         database: configService.get<string>('DB_NAME'),
-        entities: [__dirname + '/../**/*.entity{.ts,.js}'],
-        synchronize: configService.get<boolean>('DB_SYNCHRONIZE'), // to disabled in production
+        entities: [__dirname + '/../modules/**/*.entity.js'],
+        synchronize: configService.get<boolean>('DB_SYNCHRONIZE'), // to disable in production
         ssl: { rejectUnauthorized: false },
       }),
     }),

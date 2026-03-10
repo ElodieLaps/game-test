@@ -3,8 +3,7 @@
 	export let data: {
 		users: { id: string; name: string; email: string }[];
 	};
-
-	const user = $userStore;
+	console.log($userStore);
 </script>
 
 <svelte:head>
@@ -15,7 +14,10 @@
 <section>
 	<h1>home page</h1>
 
-	<p>user connecté: {user.name}</p>
+	{#if $userStore}
+		<p>user connecté: {$userStore.name}</p>
+		<pre>{JSON.stringify($userStore, null, 2)}</pre>
+	{/if}
 
 	{#each data.users as user}
 		<li>{user.name} - {user.email}</li>

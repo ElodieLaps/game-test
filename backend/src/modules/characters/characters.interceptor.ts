@@ -9,7 +9,7 @@ import {
 } from '@nestjs/common';
 import { Observable } from 'rxjs';
 import { getStarterEquipment } from './equipment/utils';
-import type { RoleName } from './roles/types';
+import { RoleName } from '@shared/types';
 import statistics from './statistics';
 
 @Injectable()

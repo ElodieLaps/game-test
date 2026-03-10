@@ -1,7 +1,5 @@
+import type { GenderName, RaceName, RoleName } from '@shared/types';
 import { IsNotEmpty, IsString } from 'class-validator';
-import type { GenderName } from './genders/types';
-import type { RaceName } from './races/types';
-import type { RoleName } from './roles/types';
 
 export class CharacterBodyDto {
   @IsString()

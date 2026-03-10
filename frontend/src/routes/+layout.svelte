@@ -19,8 +19,8 @@
 			<button type="submit">Se déconnecter</button>
 		</form>
 	{:else}
-		<a href="/login">Se connecter</a>
-		<a href="/register">créer un compte</a>
+		<a href="/user/login">Se connecter</a>
+		<a href="/user/register">créer un compte</a>
 	{/if}
 
 	<main>

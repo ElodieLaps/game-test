@@ -1,5 +1,5 @@
 {
-  "name": "project-name",
+  "name": "backend",
   "version": "0.0.1",
   "description": "",
   "author": "",
@@ -8,10 +8,10 @@
   "scripts": {
     "build": "nest build",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
-    "start": "nest start",
+    "start": "node -r tsconfig-paths/register dist/main.js",
     "start:dev": "nest start --watch",
+    "start:prod": "node -r tsconfig-paths/register dist/main.js",
     "start:debug": "nest start --debug --watch",
-    "start:prod": "node dist/main",
     "lint": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix",
     "test": "jest",
     "test:watch": "jest --watch",
@@ -26,6 +26,7 @@
     "@nestjs/jwt": "^11.0.2",
     "@nestjs/platform-express": "^11.1.14",
     "@nestjs/typeorm": "^11.0.0",
+    "@project-name/shared": "workspace:*",
     "@types/bcrypt": "^6.0.0",
     "bcrypt": "^6.0.0",
     "class-transformer": "^0.5.1",
@@ -43,6 +44,8 @@
     "@nestjs/cli": "^11.0.16",
     "@nestjs/schematics": "^11.0.9",
     "@nestjs/testing": "^11.1.14",
+    "@swc/cli": "^0.8.0",
+    "@swc/core": "^1.15.18",
     "@types/cookie-parser": "^1.4.10",
     "@types/express": "^5.0.6",
     "@types/jest": "^30.0.0",
@@ -96,7 +99,10 @@
       "^@auth/(.*)$": "<rootDir>/modules/auth/$1",
       "^@characters/(.*)$": "<rootDir>/modules/characters/$1",
       "^@teams/(.*)$": "<rootDir>/modules/teams/$1",
-      "^@users/(.*)$": "<rootDir>/modules/users/$1"
+      "^@users/(.*)$": "<rootDir>/modules/users/$1",
+      "@shared/types": [
+        "../shared/dist/index.js"
+      ]
     }
   },
   "pnpm": {

@@ -1,4 +1,4 @@
+import type { User } from '$lib/domain/user/types';
 import { writable } from 'svelte/store';
 
-// faire un type user plus tard dans domain
-export const userStore = writable<any | null>(null);
+export const userStore = writable<User | null>(null);

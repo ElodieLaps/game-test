@@ -1,3 +1,4 @@
+import type { GenderName, RaceName, RoleName, StatusName } from '@shared/types';
 import { Team } from '@teams/team.entity';
 import { User } from '@users/user.entity';
 import {
@@ -8,11 +9,7 @@ import {
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import type { Equipments } from './equipment/types';
-import type { GenderName } from './genders/types';
-import type { RaceName } from './races/types';
-import type { RoleName } from './roles/types';
 import type { Statistics } from './statistics/types';
-import type { StatusName } from './status/types';
 
 @Entity('character')
 export class Character {
@@ -22,7 +19,7 @@ export class Character {
   @Column()
   name: string;
 
-  @Column()
+  @Column({ type: 'varchar' })
   gender: GenderName;
 
   @Column()
@@ -44,10 +41,10 @@ export class Character {
   @Column({ default: 1 })
   level: number;
 
-  @Column()
+  @Column({ type: 'varchar' })
   race: RaceName;
 
-  @Column()
+  @Column({ type: 'varchar' })
   role: RoleName;
 
   @Column('simple-json', { default: '[]' })
