@@ -2,3 +2,5 @@ packages:
   - "backend"
   - "frontend"
   - "shared"
+allowBuilds:
+  '@swc/core': true

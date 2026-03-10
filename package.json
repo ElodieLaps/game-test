@@ -1,0 +1,14 @@
+{
+  "name": "project-name",
+  "version": "0.0.1",
+  "description": "",
+  "author": "",
+  "private": true,
+  "license": "UNLICENSED",
+  "pnpm": {
+    "overrides": {
+      "ajv": ">=8.18.0",
+      "cookie": ">=0.7.0"
+    }
+  }
+}
