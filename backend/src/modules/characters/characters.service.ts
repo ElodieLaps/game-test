@@ -1,14 +1,13 @@
 import { Character } from '@characters/character.entity';
-import { CharacterBodyDto } from '@src/modules/characters/character.body.dto';
 import {
   BadRequestException,
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Equipment } from '@src/item/equipment/type';
+import { Equipment, EquipmentSlotName } from '@shared';
 import { Repository } from 'typeorm';
-import type { EquipmentSlotName } from './equipment/types';
+import { CharacterBodyDto } from '@characters/character.body.dto';
 
 @Injectable()
 export class CharacterService {

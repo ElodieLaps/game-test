@@ -7,10 +7,10 @@ import {
   Injectable,
   NestInterceptor,
 } from '@nestjs/common';
+
 import { Observable } from 'rxjs';
-import { getStarterEquipment } from './equipment/utils';
-import { RoleName } from '@shared/types';
-import statistics from './statistics';
+import { getStarterEquipment } from '@characters/utils';
+import { RoleName, starterStatistics } from '@shared';
 
 @Injectable()
 export class CharacterInterceptor implements NestInterceptor {
@@ -18,7 +18,7 @@ export class CharacterInterceptor implements NestInterceptor {
   intercept(context: ExecutionContext, next: CallHandler): Observable<any> {
     const request = context.switchToHttp().getRequest();
     const { race, role } = request.body;
-    const stats = statistics[race];
+    const stats = starterStatistics[race];
 
     if (!stats) {
       throw new BadRequestException('Invalid race');

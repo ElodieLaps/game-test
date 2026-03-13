@@ -100,9 +100,7 @@
       "^@characters/(.*)$": "<rootDir>/modules/characters/$1",
       "^@teams/(.*)$": "<rootDir>/modules/teams/$1",
       "^@users/(.*)$": "<rootDir>/modules/users/$1",
-      "@shared/types": [
-        "../shared/dist/index.js"
-      ]
+      "^@shared$": "../shared/dist/index.js"
     }
   },
   "pnpm": {

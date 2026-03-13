@@ -1,7 +1,7 @@
 {
   "compilerOptions": {
-    "module": "commonjs",
-    "moduleResolution": "node",
+    "module": "nodenext",
+    "moduleResolution": "nodenext",
     "esModuleInterop": true,
     "declaration": true,
     "removeComments": true,
@@ -29,7 +29,8 @@
       "@characters/*": ["src/modules/characters/*"],
       "@teams/*": ["src/modules/teams/*"],
       "@users/*": ["src/modules/users/*"],
-      "@shared/types": ["../shared/src/index.ts"]
+      "@equipments/*": ["src/modules/equipmets"],
+      "@shared": ["../shared/src/index.ts"]
     }
   },
   "include": ["src/**/*"]

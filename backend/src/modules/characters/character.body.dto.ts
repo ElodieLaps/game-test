@@ -1,4 +1,4 @@
-import type { GenderName, RaceName, RoleName } from '@shared/types';
+import { GenderName, RaceName, RoleName } from '@shared';
 import { IsNotEmpty, IsString } from 'class-validator';
 
 export class CharacterBodyDto {

@@ -1,4 +1,11 @@
-import type { GenderName, RaceName, RoleName, StatusName } from '@shared/types';
+import type {
+  Equipments,
+  GenderName,
+  RaceName,
+  RoleName,
+  Statistics,
+  StatusName,
+} from '@shared';
 import { Team } from '@teams/team.entity';
 import { User } from '@users/user.entity';
 import {
@@ -8,8 +15,6 @@ import {
   ManyToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
-import type { Equipments } from './equipment/types';
-import type { Statistics } from './statistics/types';
 
 @Entity('character')
 export class Character {

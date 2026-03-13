@@ -1,6 +1,6 @@
 import { AuthGuard } from '@auth/auth.guard';
-import { CharacterInterceptor } from '@src/modules/characters/characters.interceptor';
-import { CharacterBodyDto } from '@src/modules/characters/character.body.dto';
+import { CharacterBodyDto } from '@characters/character.body.dto';
+import { CharacterInterceptor } from '@characters/characters.interceptor';
 import { CharacterService } from '@characters/characters.service';
 import {
   Body,
@@ -13,10 +13,9 @@ import {
   UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
-import { Equipment } from '@src/item/equipment/type';
+import { Equipment, equipmentSlotNames, EquipmentSlotName } from '@shared';
 import { CurrentUser } from '@users/currentUser.decorator';
 import { User } from '@users/user.entity';
-import { equipmentSlotNames, type EquipmentSlotName } from './equipment/types';
 
 @Controller('character')
 export class CharacterController {
