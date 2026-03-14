@@ -15,7 +15,7 @@ To recreate this project with the same configuration:
 
 ```sh
 # recreate this project
-pnpm dlx sv@0.12.4 create --template demo --types ts --add prettier eslint vitest="usages:unit,component" playwright --install pnpm frontend
+pnpm dlx sv@0.12.7 create --template demo --types ts --add prettier eslint vitest="usages:unit,component" playwright tailwindcss="plugins:typography,forms" devtools-json --install pnpm frontend
 ```
 
 ## Developing

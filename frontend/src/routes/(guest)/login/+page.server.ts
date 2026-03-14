@@ -27,6 +27,6 @@ export const actions: Actions = {
 			path: '/'
 		});
 
-		redirect(302, '/');
+		redirect(302, '/characters');
 	}
 };

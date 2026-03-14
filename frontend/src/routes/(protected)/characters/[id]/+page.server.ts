@@ -1,0 +1,17 @@
+import type { PageServerLoad } from './$types';
+import { redirect } from '@sveltejs/kit';
+import { PRIVATE_API_URL } from '$env/static/private';
+
+export const load: PageServerLoad = async ({ params, cookies, fetch }) => {
+	const token = cookies.get('token');
+	if (!token) redirect(302, '/login');
+
+	const res = await fetch(`${PRIVATE_API_URL}/character/${params.id}`, {
+		headers: { Authorization: `Bearer ${token}` }
+	});
+
+	if (!res.ok) redirect(302, '/');
+
+	const character = await res.json();
+	return { character };
+};

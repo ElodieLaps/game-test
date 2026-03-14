@@ -1,5 +1,5 @@
 <script lang="ts">
-	import Header from './Header.svelte';
+	import Header from '@components/layout/Header.svelte';
 	import './layout.css';
 	import { userStore } from '$lib/stores/user.store';
 
@@ -10,7 +10,7 @@
 	});
 </script>
 
-<div class="app">
+<div class="app bg-mauve-900 text-olive-400">
 	<Header />
 
 	{#if data.isLogged}
@@ -19,19 +19,15 @@
 			<button type="submit">Se déconnecter</button>
 		</form>
 	{:else}
-		<a href="/user/login">Se connecter</a>
-		<a href="/user/register">créer un compte</a>
+		<a href="/login">Se connecter</a>
+		<a href="/register">créer un compte</a>
 	{/if}
 
 	<main>
 		{@render children()}
 	</main>
 
-	<footer>
-		<p>
-			visit <a href="https://svelte.dev/docs/kit">svelte.dev/docs/kit</a> to learn about SvelteKit
-		</p>
-	</footer>
+	<footer>game - elodie - 2026</footer>
 </div>
 
 <style>
@@ -58,10 +54,6 @@
 		justify-content: center;
 		align-items: center;
 		padding: 12px;
-	}
-
-	footer a {
-		font-weight: bold;
 	}
 
 	@media (min-width: 480px) {
