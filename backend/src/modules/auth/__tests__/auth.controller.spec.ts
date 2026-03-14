@@ -2,6 +2,13 @@ import { AuthController } from '@auth/auth.controller';
 import { AuthGuard } from '@auth/auth.guard';
 import { AuthService } from '@auth/auth.service';
 import { Test, TestingModule } from '@nestjs/testing';
+import { User } from '@src/modules/users/user.entity';
+
+const mockUser = {
+  id: '1',
+  email: 'a@b.com',
+  name: 'john',
+} as Partial<User>;
 
 describe('AuthController', () => {
   let controller: AuthController;
@@ -53,5 +60,27 @@ describe('AuthController', () => {
     });
 
     expect(result).toEqual({ token: 'token' });
+  });
+
+  describe('getAuthUser (GET /user)', () => {
+    it('should call getUserFromRequest with the user id from request', async () => {
+      const getSpy = jest
+        .spyOn(service, 'getUserFromRequest')
+        .mockResolvedValue(mockUser as Omit<User, 'password'>);
+
+      await controller.getAuthUser({ user: { id: 1 } });
+
+      expect(getSpy).toHaveBeenCalledWith(1);
+    });
+
+    it('should return the user without password', async () => {
+      jest
+        .spyOn(service, 'getUserFromRequest')
+        .mockResolvedValue(mockUser as Omit<User, 'password'>);
+
+      const result = await controller.getAuthUser({ user: { id: 1 } });
+
+      expect(result).toEqual(mockUser);
+    });
   });
 });
