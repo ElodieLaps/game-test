@@ -1,2 +1,3 @@
-export * from "./staffs";
-export * from "./swords";
+export * from "./staff";
+export * from "./sword";
+export * from "./types";

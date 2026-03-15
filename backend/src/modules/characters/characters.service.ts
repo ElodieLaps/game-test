@@ -1,3 +1,4 @@
+import { CharacterBodyDto } from '@characters/character.body.dto';
 import { Character } from '@characters/character.entity';
 import {
   BadRequestException,
@@ -5,9 +6,13 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Equipment, EquipmentSlotName } from '@shared';
+import {
+  CREATION_POINTS,
+  EquipmentName,
+  EquipmentSlotName,
+  getEquipmentByName,
+} from '@shared';
 import { Repository } from 'typeorm';
-import { CharacterBodyDto } from '@characters/character.body.dto';
 
 @Injectable()
 export class CharacterService {
@@ -49,6 +54,16 @@ export class CharacterService {
     if (characterCount >= 12)
       throw new BadRequestException('You cannot have more than 12 characters');
 
+    const customStatistics = character.customStatistics;
+    const totalPoints = Object.values(customStatistics).reduce(
+      (a, b) => a + b,
+      0,
+    );
+
+    if (totalPoints > CREATION_POINTS[character.race]) {
+      throw new BadRequestException('Too many points spent');
+    }
+
     const newCharacter = this.characterRepository.create({
       ...character,
       userId,
@@ -72,25 +87,21 @@ export class CharacterService {
   async addEquipments(
     userId: string,
     characterId: string,
-    equipments: Equipment[],
+    equipmentNames: EquipmentName[],
   ): Promise<Character> {
     const character = await this.characterRepository.findOneBy({
       id: characterId,
       userId,
     });
-
     if (!character) throw new NotFoundException('Character not found');
 
-    for (const equipment of equipments) {
+    for (const name of equipmentNames) {
+      const equipment = getEquipmentByName(name);
       const slot = equipment.slot;
-      const oldEquipment = character.equipments[slot];
 
-      if (oldEquipment) {
-        this.removeEquipmentBonuses(character, [oldEquipment]);
-      }
-
-      character.equipments[slot] = equipment;
-      this.applyEquipmentBonuses(character, [equipment]);
+      (character.equipments as Record<EquipmentSlotName, EquipmentName | null>)[
+        slot
+      ] = name;
     }
 
     return await this.characterRepository.save(character);
@@ -105,44 +116,12 @@ export class CharacterService {
       id: characterId,
       userId,
     });
-
     if (!character) throw new NotFoundException('Character not found');
 
     for (const slot of equipmentSlots) {
-      const equipment = character.equipments[slot];
-
-      if (equipment) {
-        this.removeEquipmentBonuses(character, [equipment]);
-      }
-
       character.equipments[slot] = null;
     }
 
     return await this.characterRepository.save(character);
-  }
-
-  // PRIVATE METHODS
-  private applyEquipmentBonuses(
-    character: Character,
-    equipments: Equipment[],
-  ): void {
-    for (const equipment of equipments) {
-      for (const stat of equipment.statistics) {
-        character.statistics[stat.name].value += stat.value;
-        character.statistics[stat.name].currentValue += stat.value;
-      }
-    }
-  }
-
-  private removeEquipmentBonuses(
-    character: Character,
-    equipments: Equipment[],
-  ): void {
-    for (const equipment of equipments) {
-      for (const stat of equipment.statistics) {
-        character.statistics[stat.name].value -= stat.value;
-        character.statistics[stat.name].currentValue -= stat.value;
-      }
-    }
   }
 }

@@ -1,6 +1,16 @@
-import { EquipmentSlotName } from "../equipment/constants";
-import { Equipment } from "../equipment/types";
-import { StatisticName, Statistic } from "../statistic";
+import { Shield, Weapon } from "../equipment";
+import { Head } from "../equipment/slots/head";
+import { StatisticName } from "../statistic";
 
-export type Statistics = Record<StatisticName, Omit<Statistic, "name">>;
-export type Equipments = Record<EquipmentSlotName, Equipment | null>;
+export type PersonalStats = Partial<Record<StatisticName, number>>;
+
+export type Equipments = {
+  HEAD: Head | null;
+  CHEST: null;
+  LEGS: null;
+  FEET: null;
+  HANDS: null;
+  WEAPON: Weapon | null;
+  SHIELD: Shield | null;
+  ACCESSORY: null;
+};

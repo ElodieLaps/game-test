@@ -3,9 +3,13 @@
 		genderNames,
 		raceNames,
 		roleNames,
+		statisticNames,
+		CREATION_POINTS,
+		baseStatistics,
 		type GenderName,
 		type RaceName,
-		type RoleName
+		type RoleName,
+		type StatisticName
 	} from '@shared';
 
 	type Character = {
@@ -21,6 +25,16 @@
 		race: 'HUMAN',
 		role: 'WARRIOR'
 	});
+
+	let customStatistics = $state<Partial<Record<StatisticName, number>>>(
+		Object.fromEntries(statisticNames.map((s) => [s, 0]))
+	);
+
+	const totalPoints = $derived(Object.values(customStatistics).reduce((a, b) => a + b, 0));
+	const remainingPoints = $derived(CREATION_POINTS[character.race] - totalPoints);
+
+	const getBaseValue = (statName: StatisticName) =>
+		baseStatistics[character.race].statistics[statName]?.value ?? 0;
 
 	const { form } = $props();
 </script>
@@ -48,7 +62,38 @@
 		{/each}
 	</select>
 
-	<button type="submit">Créer</button>
+	<div>
+		<p>Points restants : {remainingPoints} / {CREATION_POINTS[character.race]}</p>
+		{#each statisticNames as statName}
+			<div class="flex items-center gap-2">
+				<span class="w-32">{statName}</span>
+				<button
+					type="button"
+					onclick={() => {
+						if ((customStatistics[statName] ?? 0) > 0)
+							customStatistics[statName] = (customStatistics[statName] ?? 0) - 1;
+					}}>-</button
+				>
+				<span>
+					{getBaseValue(statName) + (customStatistics[statName] ?? 0)}
+				</span>
+				<button
+					type="button"
+					onclick={() => {
+						if (remainingPoints > 0)
+							customStatistics[statName] = (customStatistics[statName] ?? 0) + 1;
+					}}>+</button
+				>
+				<span class="text-xs text-gray-400">
+					({getBaseValue(statName)} + {customStatistics[statName] ?? 0})
+				</span>
+			</div>
+		{/each}
+	</div>
+
+	<input type="hidden" name="customStatistics" value={JSON.stringify(customStatistics)} />
+
+	<button type="submit" disabled={remainingPoints !== 0}>Créer</button>
 </form>
 
 {#if form?.error}

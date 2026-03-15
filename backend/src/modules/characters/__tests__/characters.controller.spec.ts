@@ -2,6 +2,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { CharacterController } from '@characters/characters.controller';
 import { CharacterService } from '@characters/characters.service';
 import { AuthGuard } from '@src/modules/auth/auth.guard';
+import { equipmentSlotNames } from '@shared';
 
 describe('CharacterController', () => {
   let controller: CharacterController;
@@ -45,9 +46,7 @@ describe('CharacterController', () => {
   describe('getAllCharacters', () => {
     it('should call service.getAllCharacters with user id', async () => {
       mockCharacterService.getAllCharacters.mockResolvedValue([]);
-
       await controller.getAllCharacters(mockUser);
-
       expect(service.getAllCharacters).toHaveBeenCalledWith('user-1');
     });
   });
@@ -55,9 +54,7 @@ describe('CharacterController', () => {
   describe('getCharacterById', () => {
     it('should call service.getCharacterById', async () => {
       mockCharacterService.getCharacterById.mockResolvedValue({});
-
       await controller.getCharacterById('char-1');
-
       expect(service.getCharacterById).toHaveBeenCalledWith('char-1');
     });
   });
@@ -66,9 +63,7 @@ describe('CharacterController', () => {
     it('should call service.createCharacter', async () => {
       const dto = { name: 'Hugo' } as any;
       mockCharacterService.createCharacter.mockResolvedValue({});
-
       await controller.createCharacter(mockUser, dto);
-
       expect(service.createCharacter).toHaveBeenCalledWith('user-1', dto);
     });
   });
@@ -76,35 +71,29 @@ describe('CharacterController', () => {
   describe('deleteCharacter', () => {
     it('should call service.deleteCharacter', async () => {
       mockCharacterService.deleteCharacter.mockResolvedValue(undefined);
-
       await controller.deleteCharacter('char-1', mockUser);
-
       expect(service.deleteCharacter).toHaveBeenCalledWith('user-1', 'char-1');
     });
   });
 
-  describe('setEquipment', () => {
-    it('should call service.addEquipments', async () => {
-      const equipments = [{ slot: 'HEAD' }] as any;
+  describe('addEquipments', () => {
+    it('should call service.addEquipments with equipment names', async () => {
+      const equipmentNames = ['SAUCEPAN', 'WOODEN_SPOON'] as any;
       mockCharacterService.addEquipments.mockResolvedValue({});
-
-      await controller.setEquipment('char-1', mockUser, equipments);
-
+      await controller.addEquipments('char-1', mockUser, equipmentNames);
       expect(service.addEquipments).toHaveBeenCalledWith(
         'user-1',
         'char-1',
-        equipments,
+        equipmentNames,
       );
     });
   });
 
-  describe('removeEquipment', () => {
-    it('should call service.removeEquipments', async () => {
+  describe('removeEquipments', () => {
+    it('should call service.removeEquipments with slots', async () => {
       const slots = ['HEAD'] as any;
       mockCharacterService.removeEquipments.mockResolvedValue({});
-
-      await controller.removeEquipment('char-1', mockUser, slots);
-
+      await controller.removeEquipments('char-1', mockUser, slots);
       expect(service.removeEquipments).toHaveBeenCalledWith(
         'user-1',
         'char-1',
@@ -113,13 +102,15 @@ describe('CharacterController', () => {
     });
   });
 
-  describe('removeAllEquipment', () => {
+  describe('removeAllEquipments', () => {
     it('should call service.removeEquipments with all slots', async () => {
       mockCharacterService.removeEquipments.mockResolvedValue({});
-
-      await controller.removeAllEquipment('char-1', mockUser);
-
-      expect(service.removeEquipments).toHaveBeenCalled();
+      await controller.removeAllEquipments('char-1', mockUser);
+      expect(service.removeEquipments).toHaveBeenCalledWith(
+        'user-1',
+        'char-1',
+        [...equipmentSlotNames],
+      );
     });
   });
 });

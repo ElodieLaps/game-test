@@ -19,13 +19,13 @@ export const HeadTypeNames = Object.fromEntries(
   headTypeNames.map((w) => [w, w]),
 );
 
-export const shieldTypeNames = ["HEAVY_SHIELD", "LIGHT_SHIELD"] as const;
+export const shieldTypeNames = ["LIGHT_SHIELD"] as const;
 export type ShieldTypeName = (typeof shieldTypeNames)[number];
 export const ShieldTypeNames = Object.fromEntries(
   shieldTypeNames.map((w) => [w, w]),
 );
 
-export const weaponTypeNames = ["SWORD", "STAFF", "DAGGER", "MACE"] as const;
+export const weaponTypeNames = ["SWORD", "STAFF"] as const;
 export type WeaponTypeName = (typeof weaponTypeNames)[number];
 export const WeaponTypeNames = Object.fromEntries(
   weaponTypeNames.map((w) => [w, w]),

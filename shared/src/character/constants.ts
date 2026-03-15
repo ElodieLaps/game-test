@@ -2,7 +2,7 @@ export const genderNames = ["MALE", "FEMALE", "OTHER"] as const;
 export type GenderName = (typeof genderNames)[number];
 export const GenderNames = Object.fromEntries(genderNames.map((g) => [g, g]));
 
-export const raceNames = ["HUMAN", "ELF", "DWARF", "ORC", "KIRIN"] as const;
+export const raceNames = ["HUMAN", "ELF", "DWARF"] as const;
 export type RaceName = (typeof raceNames)[number];
 export const RaceNames = Object.fromEntries(raceNames.map((r) => [r, r]));
 

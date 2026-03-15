@@ -1,4 +1,5 @@
 import { Character } from '@characters/character.entity';
+import { Item } from '@shared';
 import { User } from '@users/user.entity';
 import {
   Column,
@@ -28,4 +29,7 @@ export class Team {
 
   @OneToMany(() => Character, (character) => character.team)
   characters: Character[];
+
+  @Column('jsonb', { default: '[]' })
+  inventory: Item[];
 }

@@ -1,9 +1,9 @@
 import type {
+  CustomStatistics,
   Equipments,
   GenderName,
   RaceName,
   RoleName,
-  Statistics,
   StatusName,
 } from '@shared';
 import { Team } from '@teams/team.entity';
@@ -55,8 +55,17 @@ export class Character {
   @Column('simple-json', { default: '[]' })
   statuses: StatusName[];
 
-  @Column('jsonb')
-  statistics: Statistics;
+  @Column({ default: 0 })
+  currentExperience: number;
+
+  @Column({ default: 0 })
+  currentHealth: number;
+
+  @Column({ default: 0 })
+  currentMana: number;
+
+  @Column('jsonb', { default: '{}' })
+  customStatistics: CustomStatistics;
 
   @Column('jsonb')
   equipments: Equipments;

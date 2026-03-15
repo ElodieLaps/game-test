@@ -1,3 +1,3 @@
 export * from "./constants";
-export * from "./raceStatistics";
+export * from "./bases";
 export * from "./types";

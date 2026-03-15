@@ -1,5 +1,10 @@
-import type { GenderName, RaceName, RoleName } from '@shared';
-import { IsNotEmpty, IsString } from 'class-validator';
+import type { CustomStatistics, GenderName, RaceName, RoleName } from '@shared';
+import {
+  IsNotEmpty,
+  IsObject,
+  IsString,
+  ValidateNested,
+} from 'class-validator';
 
 export class CharacterBodyDto {
   @IsString()
@@ -17,4 +22,8 @@ export class CharacterBodyDto {
   @IsString()
   @IsNotEmpty()
   role: RoleName;
+
+  @IsObject()
+  @ValidateNested()
+  customStatistics: CustomStatistics;
 }

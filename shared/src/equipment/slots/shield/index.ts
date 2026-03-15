@@ -1,1 +1,2 @@
-export * from './lightShields'
+export * from "./lightShield";
+export * from "./types";

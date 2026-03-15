@@ -1,4 +1,4 @@
-import { CharacterInterceptor } from '@characters/characters.interceptor';
+import { CharacterCreateInterceptor } from '@src/modules/characters/charactersCreate.interceptor';
 import {
   BadRequestException,
   CallHandler,
@@ -6,35 +6,28 @@ import {
 } from '@nestjs/common';
 import { of } from 'rxjs';
 
-describe('CharacterInterceptor', () => {
-  let interceptor: CharacterInterceptor;
-  let mockCharacterService: any;
+describe('CharacterCreateInterceptor', () => {
+  let interceptor: CharacterCreateInterceptor;
 
   beforeEach(() => {
-    mockCharacterService = {
-      applyEquipmentBonuses: jest.fn(),
-    };
-
-    interceptor = new CharacterInterceptor(mockCharacterService);
+    interceptor = new CharacterCreateInterceptor();
   });
 
   it('should be defined', () => {
     expect(interceptor).toBeDefined();
   });
 
-  it('should enrich request body with statistics and equipments', (done) => {
+  it('should enrich request body with equipments, currentHp, currentMana and currentXp', (done) => {
     const mockRequest: any = {
       body: {
         race: 'HUMAN',
-        role: 'PRIEST',
+        role: 'WARRIOR',
       },
     };
 
     const mockContext = {
       switchToHttp: () => ({
         getRequest: () => mockRequest,
-        getResponse: () => ({}),
-        getNext: () => jest.fn(),
       }),
     } as unknown as ExecutionContext;
 
@@ -43,9 +36,10 @@ describe('CharacterInterceptor', () => {
     };
 
     interceptor.intercept(mockContext, mockNext).subscribe(() => {
-      expect(mockRequest.body.statistics).toBeDefined();
       expect(mockRequest.body.equipments).toBeDefined();
-      expect(mockCharacterService.applyEquipmentBonuses).toHaveBeenCalled();
+      expect(mockRequest.body.currentHp).toBeDefined();
+      expect(mockRequest.body.currentMana).toBeDefined();
+      expect(mockRequest.body.currentXp).toBe(0);
       done();
     });
   });
@@ -54,15 +48,13 @@ describe('CharacterInterceptor', () => {
     const mockRequest: any = {
       body: {
         race: 'INVALID_RACE',
-        role: 'PRIEST',
+        role: 'WARRIOR',
       },
     };
 
     const mockContext = {
       switchToHttp: () => ({
         getRequest: () => mockRequest,
-        getResponse: () => ({}),
-        getNext: () => jest.fn(),
       }),
     } as unknown as ExecutionContext;
 

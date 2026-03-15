@@ -1,10 +1,12 @@
-import { RaceName, Statistics } from "../character";
+import { RaceName } from "../character";
+import { DWARF, ELF, HUMAN } from "./bases";
 import { StatisticName } from "./constants";
-import DWARF from "./raceStatistics/dwarf";
-import ELF from "./raceStatistics/elf";
-import HUMAN from "./raceStatistics/human";
-import KIRIN from "./raceStatistics/kirin";
-import ORC from "./raceStatistics/orc";
+
+export const CREATION_POINTS: Record<RaceName, number> = {
+  HUMAN: 15,
+  ELF: 30,
+  DWARF: 15,
+};
 
 export type Statistic = {
   name: StatisticName;
@@ -13,10 +15,25 @@ export type Statistic = {
   progressIndex: number;
 };
 
-export const starterStatistics = {
+export type BaseStatistic = {
+  value: number;
+  progressIndex: number;
+};
+
+export type ExperienceStatistic = {
+  value: number;
+  progressIndex: number;
+};
+
+export type RaceStatistics = {
+  experience: ExperienceStatistic;
+  statistics: Record<StatisticName, BaseStatistic>;
+};
+
+export type CustomStatistics = Partial<Record<StatisticName, number>>;
+
+export const baseStatistics = {
   HUMAN,
   ELF,
   DWARF,
-  ORC,
-  KIRIN,
-} satisfies Record<RaceName, Statistics>;
+} satisfies Record<RaceName, RaceStatistics>;

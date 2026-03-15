@@ -13,11 +13,21 @@ describe('CharacterService', () => {
     id: 'char-1',
     userId: 'user-1',
     teamId: null,
-    equipments: {},
+    equipments: {
+      HEAD: null,
+      CHEST: null,
+      LEGS: null,
+      FEET: null,
+      HANDS: null,
+      WEAPON: null,
+      SHIELD: null,
+      ACCESSORY: null,
+    },
     statistics: {
       STRENGTH: { value: 10, currentValue: 10 },
+      DODGE: { value: 5, currentValue: 5 },
     },
-  } as any;
+  } as Character;
 
   const mockRepo = {
     find: jest.fn(),
@@ -58,9 +68,7 @@ describe('CharacterService', () => {
 
     const result = await service.getAllCharacters('user-1');
 
-    expect(repo.find).toHaveBeenCalledWith({
-      where: { userId: 'user-1' },
-    });
+    expect(repo.find).toHaveBeenCalledWith({ where: { userId: 'user-1' } });
     expect(result).toEqual([mockCharacter]);
   });
 
@@ -135,19 +143,10 @@ describe('CharacterService', () => {
   // =========================
 
   it('should add equipment and apply bonuses', async () => {
-    const equipment = {
-      slot: 'HEAD',
-      statistics: [{ name: 'STRENGTH', value: 5 }],
-    };
-
-    repo.findOneBy.mockResolvedValue({
-      ...mockCharacter,
-      equipments: {},
-    });
-
+    repo.findOneBy.mockResolvedValue({ ...mockCharacter });
     repo.save.mockResolvedValue(mockCharacter);
 
-    await service.addEquipments('user-1', 'char-1', [equipment as any]);
+    await service.addEquipments('user-1', 'char-1', ['SAUCEPAN'] as any);
 
     expect(repo.save).toHaveBeenCalled();
   });
@@ -165,18 +164,11 @@ describe('CharacterService', () => {
   // =========================
 
   it('should remove equipment and remove bonuses', async () => {
-    const characterWithEquip = {
+    repo.findOneBy.mockResolvedValue({
       ...mockCharacter,
-      equipments: {
-        HEAD: {
-          slot: 'HEAD',
-          statistics: [{ name: 'STRENGTH', value: 5 }],
-        },
-      },
-    };
-
-    repo.findOneBy.mockResolvedValue(characterWithEquip);
-    repo.save.mockResolvedValue(characterWithEquip);
+      equipments: { ...mockCharacter.equipments, HEAD: 'SAUCEPAN' },
+    });
+    repo.save.mockResolvedValue(mockCharacter);
 
     await service.removeEquipments('user-1', 'char-1', ['HEAD'] as any);
 

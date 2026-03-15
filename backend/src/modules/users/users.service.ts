@@ -2,6 +2,7 @@ import {
   ConflictException,
   Injectable,
   InternalServerErrorException,
+  NotFoundException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { TeamService } from '@src/modules/teams/teams.service';
@@ -28,15 +29,9 @@ export class UserService {
   }
 
   async getUserById(id: string): Promise<User> {
-    try {
-      const user = await this.userRepository.findOneBy({ id });
-      if (!user) {
-        throw new Error('User not found');
-      }
-      return user;
-    } catch (error) {
-      throw new Error('Error getting user by id');
-    }
+    const user = await this.userRepository.findOneBy({ id });
+    if (!user) throw new NotFoundException('User not found');
+    return user;
   }
 
   async getUserByName(name: string): Promise<User> {

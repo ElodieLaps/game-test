@@ -1,114 +1,121 @@
+@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY0ZjY4N2E4LTZjMjEtNDkyYi05MmNiLWE3NzlmZWU5ZTliZiIsImlhdCI6MTc3MzYwOTIzNywiZXhwIjoxNzczNjEyODM3fQ.IQl2dxl7rU9Hl_ts4n5XrfzQraci-aj0OM0gyqb1-94
+@characterId = fd08d602-1064-42db-8a89-e57ce9562a4b
+@characterId1 = ""
+@characterId2 = ""
+@teamId = ""
+@userId = 64f687a8-6c21-492b-92cb-a779fee9e9bf
+
+@email = ""
+
+
 ### health check ###
 GET http://localhost:3000/
 
 ### USER ###
+
 ### all users
 GET http://localhost:3000/user/all
 
 ### user by id    
-GET http://localhost:3000/user/e63006d1-c08c-400f-97e5-e331291a27ca
+GET http://localhost:3000/user/{{userId}}
 
 ### create user
 POST http://localhost:3000/user
 Content-Type: application/json
 
 {   
-    "name": "Dédé",
-    "password": "78988",
-    "email": "graiod@example.com"
+    "name": "Elo",
+    "password": "elotest",
+    "email": "elo@gmail.com"
 }
 
 ### AUTH ###
-### Login
+
+### login
 POST http://localhost:3000/login
 Content-Type: application/json
 
 {   
-    "name": "Dédé",
-    "password": "78988"
+    "email": "elo@gmail.com",
+    "password": "elotest"
 }
-### User ###
+
+### get current user
 GET http://localhost:3000/user
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY0OTY4M2ViLWYwZDUtNGZjNC1hMTA1LTcyODQ0MzMyNWE3YyIsImlhdCI6MTc3MjIwMzQ3MCwiZXhwIjoxNzcyMjA3MDcwfQ.5QI8NML_O5lz87sjkuoXRzF0QahUZAtqjZVfN7GDbkw
+Authorization: Bearer {{token}}
 
 ### CHARACTER ###
+
 ### create character    
 POST http://localhost:3000/character
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY0OTY4M2ViLWYwZDUtNGZjNC1hMTA1LTcyODQ0MzMyNWE3YyIsImlhdCI6MTc3MjM4MjY4OCwiZXhwIjoxNzcyMzg2Mjg4fQ.oQAcWHn9sEm5vkzpdgP3L1S3wlmFOzIu8dtN3P9_U0I
+Authorization: Bearer {{token}}
 Content-Type: application/json
 
 {
-    "name": "Pierrot",
-    "race": "KIRIN",
-    "role": "ROGUE",
-    "gender": "FEMALE",
-    "userId": "649683eb-f0d5-4fc4-a105-728443325a7c"
+    "name": "Hugo",
+    "race": "ELF",
+    "role": "WARRIOR",
+    "gender": "MALE",
+    "customStatistics" : {
+        "STRENGTH": 5,
+        "HEALTH": 4,
+        "MANA": 3,
+        "ARMOR": 2,
+        "DODGE": 1
+    }
 }
-
-### delete character
-DELETE http://localhost:3000/character/2fe95315-5811-432e-a55c-ab2b622e8890
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY0OTY4M2ViLWYwZDUtNGZjNC1hMTA1LTcyODQ0MzMyNWE3YyIsImlhdCI6MTc3MjM4MjY4OCwiZXhwIjoxNzcyMzg2Mjg4fQ.oQAcWHn9sEm5vkzpdgP3L1S3wlmFOzIu8dtN3P9_U0I
 
 ### get all characters
 GET http://localhost:3000/character    
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY0OTY4M2ViLWYwZDUtNGZjNC1hMTA1LTcyODQ0MzMyNWE3YyIsImlhdCI6MTc3MjM5OTgzMCwiZXhwIjoxNzcyNDAzNDMwfQ.myn6O0K17_cv7eTWwTpiaQiEbUaEjbZ1ALwM-Rg256U
+Authorization: Bearer {{token}}
 
 ### get character by id
-GET http://localhost:3000/character/f3d7591d-59b0-48a8-aed1-bd73a99cf47d
+GET http://localhost:3000/character/{{characterId}}
+Authorization: Bearer {{token}}
+
+### delete character
+DELETE http://localhost:3000/character/{{characterId}}
+Authorization: Bearer {{token}}
 
 ### add character equipments
-PUT http://localhost:3000/character/f3d7591d-59b0-48a8-aed1-bd73a99cf47d/equipments/add
+PUT http://localhost:3000/character/{{characterId}}/equipments/add
+Authorization: Bearer {{token}}
 Content-Type: application/json
 
-[
-    {
-        "slot": "WEAPON",
-        "weaponTypeName": "STAFF",
-        "name": "Wooden Staff",
-        "statistics": [
-            { "name": "POWER", "value": 3 }
-        ]
-    },
-    {
-        "slot": "SHIELD",
-        "weaponTypeName": "SWORD",
-        "name": "Wooden Shield",
-        "statistics": [
-            { "name": "STRENGTH", "value": 3 }
-        ]
-    }
-]
+["SAUCEPAN", "WOODEN_SPOON", "SAUCEPAN_LID"]
 
 ### remove character equipments
-PUT http://localhost:3000/character/f3d7591d-59b0-48a8-aed1-bd73a99cf47d/equipments/remove
+PUT http://localhost:3000/character/{{characterId}}/equipments/remove
+Authorization: Bearer {{token}}
 Content-Type: application/json
 
-[
-    "HEAD",
-    "SHIELD"
-]
+["HEAD", "SHIELD"]
 
 ### remove all character equipments
-PUT http://localhost:3000/character/f3d7591d-59b0-48a8-aed1-bd73a99cf47d/equipments/removeAll 
+PUT http://localhost:3000/character/{{characterId}}/equipments/removeAll
+Authorization: Bearer {{token}}
 
 ### TEAM ###
+
 ### create team
 POST http://localhost:3000/team
+Authorization: Bearer {{token}}
 Content-Type: application/json  
 
 {
-    "name": "Les Bests",
-    "userId": "649683eb-f0d5-4fc4-a105-728443325a7c"
+    "name": "Les Bests"
 }
 
 ### get user teams
-GET http://localhost:3000/team/649683eb-f0d5-4fc4-a105-728443325a7c
+GET http://localhost:3000/team
+Authorization: Bearer {{token}}
 
 ### add characters to team
-PUT http://localhost:3000/team/aa48f96b-e4ea-4b9f-b360-f8c175499a5f/addCharacters
+PUT http://localhost:3000/team/{{teamId}}/addCharacters
+Authorization: Bearer {{token}}
 Content-Type: application/json  
 
 [
-    "d0ee8d51-f6e1-4f26-97ff-1dabc1afbbc1",
-    "65568877-2763-45de-9465-4fb46cd0a2cd"
+    "{{characterId1}}",
+    "{{characterId2}}"
 ]

@@ -1,6 +1,5 @@
 import { AuthGuard } from '@auth/auth.guard';
 import { CharacterBodyDto } from '@characters/character.body.dto';
-import { CharacterInterceptor } from '@characters/characters.interceptor';
 import { CharacterService } from '@characters/characters.service';
 import {
   Body,
@@ -13,34 +12,33 @@ import {
   UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
-import { Equipment, equipmentSlotNames, EquipmentSlotName } from '@shared';
+import { EquipmentName, EquipmentSlotName, equipmentSlotNames } from '@shared';
+import { CharacterCreateInterceptor } from '@src/modules/characters/charactersCreate.interceptor';
 import { CurrentUser } from '@users/currentUser.decorator';
 import { User } from '@users/user.entity';
+import { CharactersComputeInterceptor } from './charactersCompute.interceptor';
 
 @Controller('character')
 export class CharacterController {
   constructor(private readonly characterService: CharacterService) {}
 
-  // READING
-  // GET ALL CHARACTERS FROM USER
   @Get()
   @UseGuards(AuthGuard)
+  @UseInterceptors(CharactersComputeInterceptor)
   async getAllCharacters(@CurrentUser() user: User) {
     return await this.characterService.getAllCharacters(user.id);
   }
 
-  // GET CHARACTER BY ID
   @Get('/:id')
   @UseGuards(AuthGuard)
+  @UseInterceptors(CharactersComputeInterceptor)
   async getCharacterById(@Param('id') id: string) {
     return await this.characterService.getCharacterById(id);
   }
 
-  // WRITING
-  // CREATE CHARACTER
   @Post()
   @UseGuards(AuthGuard)
-  @UseInterceptors(CharacterInterceptor)
+  @UseInterceptors(CharacterCreateInterceptor)
   async createCharacter(
     @CurrentUser() user: User,
     @Body() characterDto: CharacterBodyDto,
@@ -48,35 +46,32 @@ export class CharacterController {
     return await this.characterService.createCharacter(user.id, characterDto);
   }
 
-  //DELETE CHARACTER
   @Delete(':id')
   @UseGuards(AuthGuard)
   async deleteCharacter(
-    @Param('id') characterid: string,
-    @CurrentUser() user: User,
-  ) {
-    return await this.characterService.deleteCharacter(user.id, characterid);
-  }
-
-  //ADD EQUIPMENTS TO CHARACTER
-  @Put('/:id/equipments/add')
-  @UseGuards(AuthGuard)
-  async setEquipment(
     @Param('id') characterId: string,
     @CurrentUser() user: User,
-    @Body() equipments: Equipment[],
+  ) {
+    return await this.characterService.deleteCharacter(user.id, characterId);
+  }
+
+  @Put('/:id/equipments/add')
+  @UseGuards(AuthGuard)
+  async addEquipments(
+    @Param('id') characterId: string,
+    @CurrentUser() user: User,
+    @Body() equipmentNames: EquipmentName[],
   ) {
     return await this.characterService.addEquipments(
       user.id,
       characterId,
-      equipments,
+      equipmentNames,
     );
   }
 
-  //REMOVE EQUIPMENTS FROM CHARACTER
   @Put('/:id/equipments/remove')
   @UseGuards(AuthGuard)
-  async removeEquipment(
+  async removeEquipments(
     @Param('id') id: string,
     @CurrentUser() user: User,
     @Body() equipmentSlots: EquipmentSlotName[],
@@ -88,10 +83,12 @@ export class CharacterController {
     );
   }
 
-  // REMOVE ALL EQUIPMENTS FROM CHARACTER
   @Put('/:id/equipments/removeAll')
   @UseGuards(AuthGuard)
-  async removeAllEquipment(@Param('id') id: string, @CurrentUser() user: User) {
+  async removeAllEquipments(
+    @Param('id') id: string,
+    @CurrentUser() user: User,
+  ) {
     return await this.characterService.removeEquipments(user.id, id, [
       ...equipmentSlotNames,
     ]);
