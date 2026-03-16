@@ -11,6 +11,8 @@ import {
   EquipmentName,
   EquipmentSlotName,
   getEquipmentByName,
+  getEquipmentsBySlotAndRole,
+  RoleName,
 } from '@shared';
 import { Repository } from 'typeorm';
 
@@ -97,10 +99,19 @@ export class CharacterService {
 
     for (const name of equipmentNames) {
       const equipment = getEquipmentByName(name);
-      const slot = equipment.slot;
+      const allowed = getEquipmentsBySlotAndRole(
+        equipment.slot,
+        character.role as RoleName,
+      );
+
+      if (!allowed.find((e) => e.name === name)) {
+        throw new BadRequestException(
+          `${name} is not allowed for role ${character.role}`,
+        );
+      }
 
       (character.equipments as Record<EquipmentSlotName, EquipmentName | null>)[
-        slot
+        equipment.slot
       ] = name;
     }
 

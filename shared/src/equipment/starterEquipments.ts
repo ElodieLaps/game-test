@@ -1,13 +1,13 @@
 import { Equipments } from "../character";
 
 export const magicalStarterEquipment: Equipments = {
-  HEAD: "SAUCEPAN",
+  HEAD: "PANTY_ELASTIC",
   CHEST: null,
   LEGS: null,
   FEET: null,
   HANDS: null,
   WEAPON: "WALNUT_BRANCH",
-  SHIELD: "SAUCEPAN_LID",
+  SHIELD: null,
   ACCESSORY: null,
 };
 

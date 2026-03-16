@@ -13,7 +13,7 @@ export const EquipmentSlotNames = Object.fromEntries(
   equipmentSlotNames.map((s) => [s, s]),
 );
 
-export const headTypeNames = ["HELMET"] as const;
+export const headTypeNames = ["HELMET", "TIARA"] as const;
 export type HeadTypeName = (typeof headTypeNames)[number];
 export const HeadTypeNames = Object.fromEntries(
   headTypeNames.map((w) => [w, w]),

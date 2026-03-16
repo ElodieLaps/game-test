@@ -6,6 +6,7 @@ import {
   WeaponTypeName,
 } from "./constants";
 import { HelmetName } from "./slots";
+import { TiaraName } from "./slots/head/tiara/constants";
 import { LightShieldName } from "./slots/shield/lightShield/constants";
 import { StaffName } from "./slots/weapon/staff";
 import { SwordName } from "./slots/weapon/sword/constants";
@@ -18,6 +19,7 @@ export interface EquipmentBase {
 
 export type EquipmentName =
   | HelmetName
+  | TiaraName
   | LightShieldName
   | SwordName
   | StaffName;
