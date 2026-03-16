@@ -37,9 +37,9 @@ describe('CharacterCreateInterceptor', () => {
 
     interceptor.intercept(mockContext, mockNext).subscribe(() => {
       expect(mockRequest.body.equipments).toBeDefined();
-      expect(mockRequest.body.currentHp).toBeDefined();
+      expect(mockRequest.body.currentHealth).toBeDefined();
       expect(mockRequest.body.currentMana).toBeDefined();
-      expect(mockRequest.body.currentXp).toBe(0);
+      expect(mockRequest.body.currentExperience).toBe(0);
       done();
     });
   });

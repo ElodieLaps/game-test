@@ -83,9 +83,7 @@ describe('UserService', () => {
     it('should throw error if user not found', async () => {
       mockRepo.findOneBy.mockResolvedValue(null);
 
-      await expect(service.getUserById('1')).rejects.toThrow(
-        'Error getting user by id',
-      );
+      await expect(service.getUserById('1')).rejects.toThrow('User not found');
     });
   });
 

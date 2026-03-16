@@ -27,7 +27,7 @@ describe('CharacterService', () => {
       STRENGTH: { value: 10, currentValue: 10 },
       DODGE: { value: 5, currentValue: 5 },
     },
-  } as Character;
+  } as unknown as Character;
 
   const mockRepo = {
     find: jest.fn(),
@@ -103,7 +103,8 @@ describe('CharacterService', () => {
 
     const result = await service.createCharacter('user-1', {
       name: 'Hugo',
-    } as any);
+      customStatistics: { STRENGTH: 5 },
+    } as Character);
 
     expect(repo.count).toHaveBeenCalled();
     expect(repo.save).toHaveBeenCalled();
@@ -143,7 +144,11 @@ describe('CharacterService', () => {
   // =========================
 
   it('should add equipment and apply bonuses', async () => {
-    repo.findOneBy.mockResolvedValue({ ...mockCharacter });
+    repo.findOneBy.mockResolvedValue({
+      ...mockCharacter,
+      role: 'WARRIOR',
+      equipments: { ...mockCharacter.equipments },
+    });
     repo.save.mockResolvedValue(mockCharacter);
 
     await service.addEquipments('user-1', 'char-1', ['SAUCEPAN'] as any);
