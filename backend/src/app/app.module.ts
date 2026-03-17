@@ -2,11 +2,12 @@ import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AuthModule } from '@src/modules/auth/auth.module';
-import { CharacterModule } from '@src/modules/characters/characters.module';
+import { CharacterModule } from '@characters/characters.module';
 import { TeamModule } from '@src/modules/teams/teams.module';
-import { UserModule } from '../modules/users/users.module';
+import { UserModule } from '@users/users.module';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
+import { InventoryModule } from '@inventories/inventories.module';
 
 @Module({
   imports: [
@@ -33,6 +34,7 @@ import { AppService } from './app.service';
     AuthModule,
     CharacterModule,
     TeamModule,
+    InventoryModule,
   ],
   controllers: [AppController],
   providers: [AppService],

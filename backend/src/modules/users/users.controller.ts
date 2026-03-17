@@ -1,15 +1,18 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   Param,
   Post,
+  UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
 import { UserBodyDto } from '@src/modules/users/user.body.dto';
 import { User } from '@users/user.entity';
 import { UserInterceptor } from '@users/users.interceptor';
 import { UserService } from '@users/users.service';
+import { AuthGuard } from '@auth/auth.guard';
 
 @Controller('user')
 export class UserController {
@@ -29,5 +32,11 @@ export class UserController {
   @Post()
   async createUser(@Body() user: UserBodyDto) {
     return await this.userService.createUser(user);
+  }
+
+  @Delete(':id')
+  @UseGuards(AuthGuard)
+  async deleteUser(@Param('id') id: string) {
+    return await this.userService.deleteUser(id);
   }
 }

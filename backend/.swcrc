@@ -13,6 +13,7 @@
       "@auth/*": ["src/modules/auth/*"],
       "@characters/*": ["src/modules/characters/*"],
       "@teams/*": ["src/modules/teams/*"],
+      "@inventories/*": ["src/modules/inventories/*"],
       "@users/*": ["src/modules/users/*"]
     }
   }

@@ -32,8 +32,12 @@
       "@teams/*": ["src/modules/teams/*"],
       "@users/*": ["src/modules/users/*"],
       "@equipments/*": ["src/modules/equipmets"],
+      "@inventories/*": ["src/modules/inventories/*"],
       "@shared": ["../shared/src/index.ts"]
     }
   },
-  "include": ["src/**/*", "src/modules/characters/charactersCompute.interceptor.ts"]
+  "include": [
+    "src/**/*",
+    "src/modules/characters/charactersCompute.interceptor.ts"
+  ]
 }

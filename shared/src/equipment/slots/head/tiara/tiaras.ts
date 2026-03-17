@@ -33,4 +33,4 @@ export const GOLDEN_TIARA: Equipment = {
   ],
 };
 
-export default [SILVER_TIARA, GOLDEN_TIARA];
+export default [PANTY_ELASTIC, SILVER_TIARA, GOLDEN_TIARA];

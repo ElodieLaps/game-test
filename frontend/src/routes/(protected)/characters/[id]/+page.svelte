@@ -64,6 +64,7 @@
 	<div class="flex flex-col gap-2">
 		<h2 class="text-sm font-medium tracking-wide text-gray-400 uppercase">Équipements</h2>
 		{#each Object.entries(character.equipments) as [slot, item]}
+			{@const available = getEquipmentsBySlotAndRole(slot as EquipmentSlotName, character.role)}
 			<div class="flex flex-col gap-1">
 				<div class="flex justify-between text-sm">
 					<span class="text-gray-500">{slot}</span>
@@ -99,7 +100,7 @@
 									>retirer</button
 								>
 							</form>
-						{:else}
+						{:else if available.length > 0}
 							<span class="text-gray-400">—</span>
 							<button
 								type="button"
@@ -110,6 +111,8 @@
 											? null
 											: (slot as EquipmentSlotName))}>équiper</button
 							>
+						{:else}
+							<span class="text-xs text-gray-400 italic">non disponible</span>
 						{/if}
 					</div>
 				</div>
@@ -118,10 +121,10 @@
 					<div
 						class="flex flex-col gap-1 rounded-lg border border-gray-200 p-2 dark:border-gray-700"
 					>
-						{#if availableEquipments.length === 0}
+						{#if available.length === 0}
 							<span class="text-xs text-gray-400">Aucun équipement disponible</span>
 						{:else}
-							{#each availableEquipments as equipment}
+							{#each available as equipment}
 								<form
 									method="POST"
 									action="?/addEquipment"

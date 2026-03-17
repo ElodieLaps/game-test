@@ -17,7 +17,7 @@ export const ROLE_ALLOWED_EQUIPMENT: Record<
   MAGE: {
     weapon: ["STAFF"],
     shield: [],
-    head: ["HELMET"],
+    head: ["TIARA"],
   },
   ROGUE: {
     weapon: ["SWORD"],
@@ -27,6 +27,6 @@ export const ROLE_ALLOWED_EQUIPMENT: Record<
   PRIEST: {
     weapon: ["STAFF"],
     shield: ["LIGHT_SHIELD"],
-    head: ["HELMET"],
+    head: ["HELMET", "TIARA"],
   },
 };

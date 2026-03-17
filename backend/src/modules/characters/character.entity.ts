@@ -39,7 +39,10 @@ export class Character {
   @Column({ default: null })
   teamId: string | null;
 
-  @ManyToOne(() => Team, (team) => team.characters)
+  @ManyToOne(() => Team, (team) => team.characters, {
+    onDelete: 'SET NULL',
+    nullable: true,
+  })
   @JoinColumn({ name: 'teamId' })
   team: Team;
 

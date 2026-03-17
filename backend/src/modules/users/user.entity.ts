@@ -1,4 +1,3 @@
-import { Item } from '@shared';
 import { Team } from '@teams/team.entity';
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 
@@ -18,7 +17,4 @@ export class User {
 
   @OneToMany(() => Team, (team) => team.userId)
   teams: Team[];
-
-  @Column('jsonb', { default: '[]' })
-  inventory: Item[];
 }

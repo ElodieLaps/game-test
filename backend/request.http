@@ -1,14 +1,12 @@
-@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY0ZjY4N2E4LTZjMjEtNDkyYi05MmNiLWE3NzlmZWU5ZTliZiIsImlhdCI6MTc3MzYwOTIzNywiZXhwIjoxNzczNjEyODM3fQ.IQl2dxl7rU9Hl_ts4n5XrfzQraci-aj0OM0gyqb1-94
+@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY0ZjY4N2E4LTZjMjEtNDkyYi05MmNiLWE3NzlmZWU5ZTliZiIsImlhdCI6MTc3Mzc2MTQxMiwiZXhwIjoxNzczNzcyMjEyfQ.PeiZIPI1nIOKLwqZ7xCcxQKEaidTydLp6VHC7ifhLAo
 @characterId = fd08d602-1064-42db-8a89-e57ce9562a4b
-@characterId1 = ""
-@characterId2 = ""
-@teamId = ""
+@characterId1 = 
+@characterId2 = 
+@teamId = 07a107f8-7546-46c1-a1b0-a04258ae3037
 @userId = 64f687a8-6c21-492b-92cb-a779fee9e9bf
+@email = elo@gmail.com
 
-@email = ""
-
-
-### health check ###
+### HEALTH CHECK ###
 GET http://localhost:3000/
 
 ### USER ###
@@ -16,18 +14,22 @@ GET http://localhost:3000/
 ### all users
 GET http://localhost:3000/user/all
 
-### user by id    
+### user by id
 GET http://localhost:3000/user/{{userId}}
 
 ### create user
 POST http://localhost:3000/user
 Content-Type: application/json
 
-{   
+{
     "name": "Elo",
     "password": "elotest",
     "email": "elo@gmail.com"
 }
+
+### delete user
+DELETE http://localhost:3000/user/{{userId}}
+Authorization: Bearer {{token}}
 
 ### AUTH ###
 
@@ -35,7 +37,7 @@ Content-Type: application/json
 POST http://localhost:3000/login
 Content-Type: application/json
 
-{   
+{
     "email": "elo@gmail.com",
     "password": "elotest"
 }
@@ -46,7 +48,7 @@ Authorization: Bearer {{token}}
 
 ### CHARACTER ###
 
-### create character    
+### create character
 POST http://localhost:3000/character
 Authorization: Bearer {{token}}
 Content-Type: application/json
@@ -56,7 +58,7 @@ Content-Type: application/json
     "race": "ELF",
     "role": "WARRIOR",
     "gender": "MALE",
-    "customStatistics" : {
+    "customStatistics": {
         "STRENGTH": 5,
         "HEALTH": 4,
         "MANA": 3,
@@ -66,7 +68,7 @@ Content-Type: application/json
 }
 
 ### get all characters
-GET http://localhost:3000/character    
+GET http://localhost:3000/character
 Authorization: Bearer {{token}}
 
 ### get character by id
@@ -100,22 +102,107 @@ Authorization: Bearer {{token}}
 ### create team
 POST http://localhost:3000/team
 Authorization: Bearer {{token}}
-Content-Type: application/json  
+Content-Type: application/json
 
 {
     "name": "Les Bests"
 }
 
-### get user teams
+### delete team
+DELETE http://localhost:3000/team/{{teamId}}
+Authorization: Bearer {{token}}
+
+### get all teams
 GET http://localhost:3000/team
+Authorization: Bearer {{token}}
+
+### get team by id
+GET http://localhost:3000/team/{{teamId}}
 Authorization: Bearer {{token}}
 
 ### add characters to team
 PUT http://localhost:3000/team/{{teamId}}/addCharacters
 Authorization: Bearer {{token}}
-Content-Type: application/json  
+Content-Type: application/json
 
 [
     "{{characterId1}}",
     "{{characterId2}}"
 ]
+
+### remove characters from team
+PUT http://localhost:3000/team/{{teamId}}/removeCharacters
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+[
+    "{{characterId1}}",
+    "{{characterId2}}"
+]
+
+### INVENTORY ###
+
+### get inventory
+GET http://localhost:3000/inventory/{{userId}}
+Authorization: Bearer {{token}}
+
+### add items to user inventory
+POST http://localhost:3000/inventory/add
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+    "ownerId": "{{userId}}",
+    "ownerType": "USER",
+    "equipments": [{ "name": "SAUCEPAN", "quantity": 1 }],
+    "consumables": []
+}
+
+### add items to team inventory
+POST http://localhost:3000/inventory/add
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+    "ownerId": "{{teamId}}",
+    "ownerType": "TEAM",
+    "equipments": [{ "name": "SAUCEPAN", "quantity": 1 }],
+    "consumables": []
+}
+
+### remove items
+DELETE http://localhost:3000/inventory/remove
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+    "ownerId": "{{userId}}",
+    "equipments": [{ "name": "SAUCEPAN", "quantity": 1 }],
+    "consumables": []
+}
+
+### transfer items from user to team
+PUT http://localhost:3000/inventory/transfer
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+    "fromId": "{{userId}}",
+    "toId": "{{teamId}}",
+    "toOwnerType": "TEAM",
+    "equipments": [{ "name": "SAUCEPAN", "quantity": 1 }],
+    "consumables": []
+}
+
+### transfer items from team to user
+PUT http://localhost:3000/inventory/transfer
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+    "fromId": "{{teamId}}",
+    "toId": "{{userId}}",
+    "toOwnerType": "TEAM",
+    "equipments": [{ "name": "SAUCEPAN", "quantity": 6}],
+    "consumables": []
+}

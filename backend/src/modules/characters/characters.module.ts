@@ -8,9 +8,10 @@ import { Team } from '@teams/team.entity';
 import { TeamService } from '@src/modules/teams/teams.service';
 import { User } from '@users/user.entity';
 import { UserService } from '@users/users.service';
+import { InventoryModule } from '@inventories/inventories.module';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Character, User, Team])],
+  imports: [TypeOrmModule.forFeature([Character, User, Team]), InventoryModule],
   controllers: [CharacterController],
   providers: [CharacterService, UserService, TeamService, JwtService],
 })

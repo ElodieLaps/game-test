@@ -3,7 +3,6 @@
 	export let data: {
 		users: { id: string; name: string; email: string }[];
 	};
-	console.log($userStore);
 </script>
 
 <svelte:head>

@@ -1,3 +1,4 @@
+import { InventoryService } from '@inventories/inventories.service';
 import {
   ConflictException,
   Injectable,
@@ -8,8 +9,8 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { TeamService } from '@src/modules/teams/teams.service';
 import { hash } from 'bcrypt';
 import { Repository } from 'typeorm';
-import { User } from './user.entity';
 import { UserBodyDto } from './user.body.dto';
+import { User } from './user.entity';
 
 @Injectable()
 export class UserService {
@@ -17,6 +18,7 @@ export class UserService {
     @InjectRepository(User)
     private readonly userRepository: Repository<User>,
     private readonly teamService: TeamService,
+    private readonly inventoryService: InventoryService,
   ) {}
 
   async getAllUsers(): Promise<User[]> {
@@ -76,6 +78,7 @@ export class UserService {
       });
       const savedUser = await this.userRepository.save(user);
 
+      await this.inventoryService.getOrCreateInventory(savedUser.id, 'USER');
       await this.teamService.createTeam(savedUser.id, {
         name: 'My Team',
       });
@@ -86,6 +89,13 @@ export class UserService {
         'Erreur lors de la création du compte',
       );
     }
+  }
+
+  async deleteUser(id: string): Promise<void> {
+    const user = await this.userRepository.findOneBy({ id });
+    if (!user) throw new NotFoundException('User not found');
+    await this.inventoryService.deleteInventory(id);
+    await this.userRepository.remove(user);
   }
 
   private async hashPassword(password: string): Promise<string> {
