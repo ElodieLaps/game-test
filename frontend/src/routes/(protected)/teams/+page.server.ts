@@ -11,5 +11,19 @@ export const load: PageServerLoad = async ({ cookies, fetch }) => {
 	});
 
 	const teams = res.ok ? await res.json() : [];
-	return { teams };
+
+	const inventories = await Promise.all(
+		teams.map((team: any) =>
+			fetch(`${PRIVATE_API_URL}/inventory/${team.id}`, {
+				headers: { Authorization: `Bearer ${token}` }
+			}).then((r) => (r.ok ? r.json() : { items: { equipments: [], consumables: [] } }))
+		)
+	);
+
+	const teamsWithInventory = teams.map((team: any, i: number) => ({
+		...team,
+		inventory: inventories[i]
+	}));
+
+	return { teams: teamsWithInventory };
 };

@@ -10,20 +10,10 @@
 	});
 </script>
 
-<div class="app bg-mauve-900 text-olive-400">
+<div class="app bg-mauve-700 text-olive-400">
 	<Header />
 
-	{#if data.isLogged}
-		<p>Bienvenue {data.user.name} !</p>
-		<form method="POST" action="/logout">
-			<button type="submit">Se déconnecter</button>
-		</form>
-	{:else}
-		<a href="/login">Se connecter</a>
-		<a href="/register">créer un compte</a>
-	{/if}
-
-	<main>
+	<main class="">
 		{@render children()}
 	</main>
 
