@@ -1,3 +1,4 @@
+import { PRIVATE_API_URL } from '$env/static/private';
 import type { LayoutServerLoad } from './$types';
 
 export const load: LayoutServerLoad = async ({ cookies, fetch }) => {
@@ -8,7 +9,7 @@ export const load: LayoutServerLoad = async ({ cookies, fetch }) => {
 	}
 
 	try {
-		const res = await fetch('http://localhost:3000/user', {
+		const res = await fetch(`${PRIVATE_API_URL}/user`, {
 			headers: {
 				Authorization: `Bearer ${token}`
 			},

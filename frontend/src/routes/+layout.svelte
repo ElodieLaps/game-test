@@ -10,45 +10,18 @@
 	});
 </script>
 
-<div class="app bg-mauve-700 text-olive-400">
-	<Header />
-
-	<main class="">
-		{@render children()}
-	</main>
-
-	<footer>game - elodie - 2026</footer>
+<div class="min-h-screen bg-main-gradient text-mist-400">
+	<div class="flex flex-col sm:flex-col-reverse">
+		<div>
+			<main class="p-6">
+				{@render children()}
+			</main>
+			<footer class="absolute bottom-0 flex w-screen justify-center bg-mauve-800 p-4">
+				game - elodie - 2026
+			</footer>
+		</div>
+		<div class="sticky bottom-0 sm:top-0">
+			<Header />
+		</div>
+	</div>
 </div>
-
-<style>
-	.app {
-		display: flex;
-		flex-direction: column;
-		min-height: 100vh;
-	}
-
-	main {
-		flex: 1;
-		display: flex;
-		flex-direction: column;
-		padding: 1rem;
-		width: 100%;
-		max-width: 64rem;
-		margin: 0 auto;
-		box-sizing: border-box;
-	}
-
-	footer {
-		display: flex;
-		flex-direction: column;
-		justify-content: center;
-		align-items: center;
-		padding: 12px;
-	}
-
-	@media (min-width: 480px) {
-		footer {
-			padding: 12px 0;
-		}
-	}
-</style>

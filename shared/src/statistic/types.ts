@@ -1,11 +1,12 @@
 import { RaceName } from "../character";
-import { DWARF, ELF, HUMAN } from "./bases";
+import { DWARF, ELF, HUMAN, GORGONE } from "./bases";
 import { StatisticName } from "./constants";
 
 export const CREATION_POINTS: Record<RaceName, number> = {
   HUMAN: 15,
   ELF: 30,
   DWARF: 15,
+  GORGONE: 30,
 };
 
 export type Statistic = {
@@ -36,4 +37,5 @@ export const baseStatistics = {
   HUMAN,
   ELF,
   DWARF,
+  GORGONE,
 } satisfies Record<RaceName, RaceStatistics>;

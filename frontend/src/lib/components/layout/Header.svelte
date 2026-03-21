@@ -4,9 +4,9 @@
 	import { userStore } from '$lib/stores/user.store';
 </script>
 
-<header class=" border-b border-mauve-950 bg-mauve-800 p-6">
+<header class="bg-glass border-b p-4 shadow-md lg:p-6">
 	<nav>
-		<ul class="flex gap-4">
+		<ul class="flex gap-2 lg:gap-4">
 			<li aria-current={page.url.pathname === '/' ? 'page' : undefined}>
 				<a href={resolve('/')}>Home</a>
 			</li>
@@ -19,6 +19,11 @@
 				</li>
 				<li aria-current={page.url.pathname == '/inventory' ? 'page' : undefined}>
 					<a href={resolve('/inventory')}>Inventaire</a>
+				</li>
+				<li aria-current={page.url.pathname == '/logout' ? 'page' : undefined}>
+					<form method="POST" action="/logout">
+						<button type="submit">Déconnexion</button>
+					</form>
 				</li>
 			{/if}
 			{#if !$userStore}
