@@ -12,7 +12,18 @@
 
 @layer components {
 	.bg-glass {
-		background: rgba(255, 255, 255, 0.05);
+		background-color: rgba(255, 255, 255, 0.05);
 		backdrop-filter: blur(8px);
 	}
+
+	/* .bg-glass:-webkit-autofill,
+	.bg-glass:-webkit-autofill:hover,
+	.bg-glass:-webkit-autofill:focus,
+	.bg-glass:-webkit-autofill:active {
+		-webkit-background-clip: text;
+		-webkit-text-fill-color: #fdfdfd;
+		transition: background-color 5000s ease-in-out 0s;
+		box-shadow: inset 0 0 20px 20px rgba(255, 255, 255, 0.05);
+		backdrop-filter: blur(8px);
+	} */
 }

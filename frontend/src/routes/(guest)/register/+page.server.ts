@@ -1,3 +1,4 @@
+import { PRIVATE_API_URL } from '$env/static/private';
 import type { Actions } from './$types';
 import { redirect, fail } from '@sveltejs/kit';
 
@@ -8,21 +9,21 @@ export const actions: Actions = {
 		const email = formData.get('email');
 		const password = formData.get('password');
 
-		const registerRes = await fetch('http://localhost:3000/user', {
+		const registerRes = await fetch(`${PRIVATE_API_URL}/user`, {
 			method: 'POST',
 			headers: { 'Content-Type': 'application/json' },
 			body: JSON.stringify({ name, email, password })
 		});
 
-		if (registerRes.status === 409) {
-			return fail(409, { error: 'Un compte avec cet email existe déjà' });
+		if (registerRes.status === 400) {
+			return fail(400, { error: 'Un compte avec cet email existe déjà' });
 		}
 
 		if (!registerRes.ok) {
 			return fail(400, { error: 'Erreur lors de la création du compte' });
 		}
 
-		const loginRes = await fetch('http://localhost:3000/login', {
+		const loginRes = await fetch(`${PRIVATE_API_URL}/login`, {
 			method: 'POST',
 			headers: { 'Content-Type': 'application/json' },
 			body: JSON.stringify({ email, password })
@@ -41,6 +42,6 @@ export const actions: Actions = {
 			path: '/'
 		});
 
-		redirect(302, '/');
+		redirect(302, '/characters');
 	}
 };
