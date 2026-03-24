@@ -24,15 +24,10 @@ export class Character {
   @Column()
   name: string;
 
-  @Column({ type: 'varchar' })
-  gender: GenderName;
-
-  @Column()
-  userId: string;
-
   @ManyToOne(() => User, (user) => user.teams, {
     onDelete: 'CASCADE',
   })
+  @ManyToOne(() => User, (user) => user.characters, { onDelete: 'CASCADE' }) // ✅ Relation inverse
   @JoinColumn({ name: 'userId' })
   user: User;
 
@@ -44,7 +39,13 @@ export class Character {
     nullable: true,
   })
   @JoinColumn({ name: 'teamId' })
-  team: Team;
+  team: Team | null;
+
+  @Column({ type: 'varchar' })
+  gender: GenderName;
+
+  @Column()
+  userId: string;
 
   @Column({ default: 1 })
   level: number;

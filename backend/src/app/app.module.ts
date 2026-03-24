@@ -8,6 +8,10 @@ import { UserModule } from '@users/users.module';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { InventoryModule } from '@inventories/inventories.module';
+import { MailerModule } from '@nestjs-modules/mailer';
+import { HandlebarsAdapter } from '@nestjs-modules/mailer/adapters/handlebars.adapter';
+import { join } from 'path';
+import { MailModule } from '@src/modules/mail/mail.module';
 
 @Module({
   imports: [
@@ -30,11 +34,36 @@ import { InventoryModule } from '@inventories/inventories.module';
         ssl: { rejectUnauthorized: false },
       }),
     }),
+    MailerModule.forRootAsync({
+      imports: [ConfigModule],
+      inject: [ConfigService],
+      useFactory: (configService: ConfigService) => ({
+        transport: {
+          host: configService.get<string>('MAIL_HOST'),
+          port: configService.get<number>('MAIL_PORT'),
+          auth: {
+            user: configService.get<string>('MAIL_USER'),
+            pass: configService.get<string>('MAIL_PASS'),
+          },
+        },
+        defaults: {
+          from: `"${configService.get('MAIL_FROM_NAME')}" <${configService.get('MAIL_FROM_ADDRESS')}>`,
+        },
+        template: {
+          dir: join(process.cwd(), 'src', 'templates'),
+          adapter: new HandlebarsAdapter(),
+          options: {
+            strict: true,
+          },
+        },
+      }),
+    }),
     UserModule,
     AuthModule,
     CharacterModule,
     TeamModule,
     InventoryModule,
+    MailModule,
   ],
   controllers: [AppController],
   providers: [AppService],

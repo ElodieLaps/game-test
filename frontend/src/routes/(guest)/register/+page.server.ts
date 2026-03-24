@@ -9,7 +9,7 @@ export const actions: Actions = {
 		const email = formData.get('email');
 		const password = formData.get('password');
 
-		const registerRes = await fetch(`${PRIVATE_API_URL}/user`, {
+		const registerRes = await fetch(`${PRIVATE_API_URL}/register`, {
 			method: 'POST',
 			headers: { 'Content-Type': 'application/json' },
 			body: JSON.stringify({ name, email, password })
@@ -23,25 +23,25 @@ export const actions: Actions = {
 			return fail(400, { error: 'Erreur lors de la création du compte' });
 		}
 
-		const loginRes = await fetch(`${PRIVATE_API_URL}/login`, {
-			method: 'POST',
-			headers: { 'Content-Type': 'application/json' },
-			body: JSON.stringify({ email, password })
-		});
+		// const loginRes = await fetch(`${PRIVATE_API_URL}/login`, {
+		// 	method: 'POST',
+		// 	headers: { 'Content-Type': 'application/json' },
+		// 	body: JSON.stringify({ email, password })
+		// });
 
-		if (!loginRes.ok) {
-			return fail(400, { error: 'Compte créé mais connexion échouée' });
-		}
+		// if (!loginRes.ok) {
+		// 	return fail(400, { error: 'Compte créé mais connexion échouée' });
+		// }
 
-		const { token } = await loginRes.json();
-		cookies.set('token', token, {
-			httpOnly: true,
-			secure: process.env.NODE_ENV === 'production',
-			sameSite: 'lax',
-			maxAge: 60 * 60 * 24,
-			path: '/'
-		});
+		// const { token } = await loginRes.json();
+		// cookies.set('token', token, {
+		// 	httpOnly: true,
+		// 	secure: process.env.NODE_ENV === 'production',
+		// 	sameSite: 'lax',
+		// 	maxAge: 60 * 60 * 24,
+		// 	path: '/'
+		// });
 
-		redirect(302, '/characters');
+		redirect(302, '/home');
 	}
 };

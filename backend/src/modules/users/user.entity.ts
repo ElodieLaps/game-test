@@ -1,5 +1,6 @@
 import { Team } from '@teams/team.entity';
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import { Character } from '../characters/character.entity';
 
 @Entity('user')
 export class User {
@@ -15,6 +16,18 @@ export class User {
   @Column({ unique: true })
   email: string;
 
-  @OneToMany(() => Team, (team) => team.userId)
+  @Column({ default: false })
+  isVerified: boolean;
+
+  @Column({ type: 'varchar', nullable: true, default: null })
+  verificationToken: string | null;
+
+  @Column({ type: 'timestamp', nullable: true, default: null })
+  verificationTokenExpiresAt: Date | null;
+
+  @OneToMany(() => Team, (team) => team.user)
   teams: Team[];
+
+  @OneToMany(() => Character, (character) => character.user)
+  characters: Character[];
 }

@@ -20,11 +20,12 @@
     "test:e2e": "jest --config ./test/jest-e2e.json"
   },
   "dependencies": {
-    "@nestjs/common": "^11.1.16",
+    "@nestjs-modules/mailer": "^2.3.0",
+    "@nestjs/common": "^11.1.17",
     "@nestjs/config": "^4.0.3",
-    "@nestjs/core": "^11.1.16",
+    "@nestjs/core": "^11.1.17",
     "@nestjs/jwt": "^11.0.2",
-    "@nestjs/platform-express": "^11.1.16",
+    "@nestjs/platform-express": "^11.1.17",
     "@nestjs/typeorm": "^11.0.0",
     "@project-name/shared": "workspace:*",
     "@types/bcrypt": "^6.0.0",
@@ -33,6 +34,8 @@
     "class-validator": "^0.14.4",
     "cookie-parser": "^1.4.7",
     "dotenv": "^17.3.1",
+    "handlebars": "^4.7.8",
+    "nodemailer": "^8.0.3",
     "pg": "^8.20.0",
     "reflect-metadata": "^0.2.2",
     "rxjs": "^7.8.2",
@@ -43,14 +46,14 @@
     "@eslint/js": "^9.39.4",
     "@nestjs/cli": "^11.0.16",
     "@nestjs/schematics": "^11.0.9",
-    "@nestjs/testing": "^11.1.16",
+    "@nestjs/testing": "^11.1.17",
     "@swc/cli": "^0.8.0",
-    "@swc/core": "^1.15.18",
+    "@swc/core": "^1.15.21",
     "@types/cookie-parser": "^1.4.10",
     "@types/express": "^5.0.6",
     "@types/jest": "^30.0.0",
     "@types/node": "^22.19.15",
-    "@types/pg": "^8.18.0",
+    "@types/pg": "^8.20.0",
     "@types/supertest": "^6.0.3",
     "eslint": "^9.39.4",
     "eslint-config-prettier": "^10.1.8",
@@ -65,7 +68,7 @@
     "ts-node": "^10.9.2",
     "tsconfig-paths": "^4.2.0",
     "typescript": "^5.9.3",
-    "typescript-eslint": "^8.57.0"
+    "typescript-eslint": "^8.57.1"
   },
   "jest": {
     "moduleFileExtensions": [
@@ -103,13 +106,6 @@
       "^@teams/(.*)$": "<rootDir>/modules/teams/$1",
       "^@users/(.*)$": "<rootDir>/modules/users/$1",
       "^@shared$": "<rootDir>/../../shared/src/index.ts"
-    }
-  },
-  "pnpm": {
-    "overrides": {
-      "ajv": ">=8.18.0",
-      "serialize-javascript": ">=7.0.3",
-      "multer": ">=2.1.0"
     }
   }
 }

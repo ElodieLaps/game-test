@@ -9,6 +9,27 @@ import {
   PrimaryGeneratedColumn,
 } from 'typeorm';
 
+// @Entity('team')
+// export class Team {
+//   @PrimaryGeneratedColumn('uuid')
+//   id: string;
+
+//   @Column()
+//   name: string;
+
+//   @Column()
+//   userId: string;
+
+//   @ManyToOne(() => User, (user) => user.teams, {
+//     onDelete: 'CASCADE',
+//   })
+//   @JoinColumn({ name: 'userId' })
+//   user: User;
+
+//   @OneToMany(() => Character, (character) => character.team)
+//   characters: Character[];
+// }
+
 @Entity('team')
 export class Team {
   @PrimaryGeneratedColumn('uuid')
@@ -20,9 +41,7 @@ export class Team {
   @Column()
   userId: string;
 
-  @ManyToOne(() => User, (user) => user.teams, {
-    onDelete: 'CASCADE',
-  })
+  @ManyToOne(() => User, (user) => user.teams, { onDelete: 'CASCADE' }) // ✅ Relation inverse
   @JoinColumn({ name: 'userId' })
   user: User;
 

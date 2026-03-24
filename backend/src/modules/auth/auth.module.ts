@@ -1,3 +1,5 @@
+import { AuthController } from '@auth/auth.controller';
+import { AuthService } from '@auth/auth.service';
 import { Character } from '@characters/character.entity';
 import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
@@ -6,12 +8,12 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { Team } from '@teams/team.entity';
 import { User } from '@users/user.entity';
 import { UserModule } from '@users/users.module';
-import { AuthController } from '@auth/auth.controller';
-import { AuthService } from '@auth/auth.service';
+import { MailModule } from '../mail/mail.module';
 
 @Module({
   imports: [
     UserModule,
+    MailModule,
     TypeOrmModule.forFeature([User, Team, Character]),
     JwtModule.registerAsync({
       imports: [ConfigModule],
