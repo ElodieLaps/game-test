@@ -6,14 +6,15 @@ import type {
   RoleName,
   StatusName,
 } from '@shared';
-import { Team } from '@teams/team.entity';
-import { User } from '@users/user.entity';
+import type { Team } from '@teams/team.entity';
+import type { User } from '@users/user.entity';
 import {
   Column,
   Entity,
   JoinColumn,
   ManyToOne,
   PrimaryGeneratedColumn,
+  type Relation,
 } from 'typeorm';
 
 @Entity('character')
@@ -24,22 +25,16 @@ export class Character {
   @Column()
   name: string;
 
-  @ManyToOne(() => User, (user) => user.teams, {
-    onDelete: 'CASCADE',
-  })
-  @ManyToOne(() => User, (user) => user.characters, { onDelete: 'CASCADE' }) // ✅ Relation inverse
+  @ManyToOne('User', 'characters', { onDelete: 'CASCADE' })
   @JoinColumn({ name: 'userId' })
-  user: User;
+  user: Relation<User>;
 
   @Column({ default: null })
   teamId: string | null;
 
-  @ManyToOne(() => Team, (team) => team.characters, {
-    onDelete: 'SET NULL',
-    nullable: true,
-  })
+  @ManyToOne('Team', 'characters', { onDelete: 'SET NULL', nullable: true })
   @JoinColumn({ name: 'teamId' })
-  team: Team | null;
+  team: Relation<Team> | null;
 
   @Column({ type: 'varchar' })
   gender: GenderName;

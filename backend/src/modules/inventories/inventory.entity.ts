@@ -1,14 +1,22 @@
-import { type InventoryOwnerType, type InventoryItems } from '@shared';
-import { Column, Entity, PrimaryColumn } from 'typeorm';
+import type { UserInventory } from '@shared';
+import {
+  Column,
+  Entity,
+  JoinColumn,
+  OneToOne,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
+import { User } from '@users/user.entity';
 
 @Entity('inventory')
 export class Inventory {
-  @PrimaryColumn()
-  ownerId: string;
+  @PrimaryGeneratedColumn('uuid')
+  id: string;
 
-  @Column({ type: 'varchar' })
-  ownerType: InventoryOwnerType;
+  @OneToOne(() => User, (user) => user.inventory, { onDelete: 'CASCADE' })
+  @JoinColumn()
+  user: User;
 
   @Column('jsonb', { default: '{ "equipments": [], "consumables": [] }' })
-  items: InventoryItems;
+  items: UserInventory;
 }

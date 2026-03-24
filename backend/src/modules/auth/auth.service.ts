@@ -1,3 +1,4 @@
+import { MailService } from '@mail/mail.service';
 import {
   BadRequestException,
   Injectable,
@@ -8,15 +9,12 @@ import {
 import { JwtService } from '@nestjs/jwt';
 import { InjectRepository } from '@nestjs/typeorm';
 import { AuthBodyDto } from '@src/modules/auth/auth.body.dto';
-import { UserService } from '@users/users.service';
-import { compare } from 'bcrypt';
-import { Repository } from 'typeorm';
-import { MailService } from '../mail/mail.service'; //TODO Alias
 import { UserBodyDto } from '@users/user.body.dto';
 import { User } from '@users/user.entity';
-import { Team } from '../teams/team.entity';
-import { Character } from '../characters/character.entity';
+import { UserService } from '@users/users.service';
+import { compare } from 'bcrypt';
 import { randomUUID } from 'crypto';
+import { Repository } from 'typeorm';
 
 @Injectable()
 export class AuthService {
@@ -45,15 +43,7 @@ export class AuthService {
   async getUserFromRequest(
     id: string,
   ): Promise<
-    Omit<
-      User,
-      | 'password'
-      | 'verificationToken'
-      | 'verificationTokenExpiresAt'
-      | 'isVerified'
-      | 'teams'
-      | 'characters'
-    >
+    Omit<User, 'password' | 'verificationToken' | 'verificationTokenExpiresAt'>
   > {
     const user = await this.userService.getUserById(id);
 
@@ -63,6 +53,10 @@ export class AuthService {
       id: user.id,
       name: user.name,
       email: user.email,
+      teams: user.teams,
+      characters: user.characters,
+      inventory: user.inventory,
+      isVerified: user.isVerified,
     };
   }
 

@@ -1,13 +1,13 @@
 import { Module } from '@nestjs/common';
+import { JwtService } from '@nestjs/jwt';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { User } from '../users/user.entity';
 import { InventoryController } from './inventories.controller';
 import { InventoryService } from './inventories.service';
 import { Inventory } from './inventory.entity';
-import { AuthModule } from '../auth/auth.module';
-import { JwtService } from '@nestjs/jwt';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Inventory])],
+  imports: [TypeOrmModule.forFeature([Inventory, User])],
   controllers: [InventoryController],
   providers: [InventoryService, JwtService],
   exports: [InventoryService],

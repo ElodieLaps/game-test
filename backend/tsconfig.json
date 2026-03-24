@@ -33,6 +33,7 @@
       "@users/*": ["src/modules/users/*"],
       "@equipments/*": ["src/modules/equipmets"],
       "@inventories/*": ["src/modules/inventories/*"],
+      "@mail/*": ["src/modules/mail/*"],
       "@shared": ["../shared/src/index.ts"]
     }
   },

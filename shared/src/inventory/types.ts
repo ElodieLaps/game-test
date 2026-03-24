@@ -13,7 +13,9 @@ export type InventoryConsumable = {
   quantity: number;
 };
 
-export type InventoryItems = {
+export type UserInventory = {
   equipments: InventoryEquipment[];
   consumables: InventoryConsumable[];
 };
+
+export type TeamInventory = ConsumableName[]; // maximum 5

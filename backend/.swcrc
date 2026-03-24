@@ -2,7 +2,6 @@
   "jsc": {
     "baseUrl": "./",
     "paths": {
-      "@shared": ["../shared/dist/index.js"],
       "@src/*": ["src/*"],
       "@app/*": ["src/app/*"],
       "@common/*": ["src/common/*"],
@@ -14,7 +13,9 @@
       "@characters/*": ["src/modules/characters/*"],
       "@teams/*": ["src/modules/teams/*"],
       "@inventories/*": ["src/modules/inventories/*"],
-      "@users/*": ["src/modules/users/*"]
+      "@users/*": ["src/modules/users/*"],
+      "@mail/*": ["src/modules/mail/*"],
+      "@shared": ["../shared/dist/index.js"]
     }
   }
 }

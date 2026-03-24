@@ -1,6 +1,14 @@
-import { Team } from '@teams/team.entity';
-import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
-import { Character } from '../characters/character.entity';
+import type { Character } from '@characters/character.entity';
+import type { Inventory } from '@inventories/inventory.entity';
+import type { Team } from '@teams/team.entity';
+import {
+  Column,
+  Entity,
+  OneToMany,
+  OneToOne,
+  PrimaryGeneratedColumn,
+  type Relation,
+} from 'typeorm';
 
 @Entity('user')
 export class User {
@@ -25,9 +33,12 @@ export class User {
   @Column({ type: 'timestamp', nullable: true, default: null })
   verificationTokenExpiresAt: Date | null;
 
-  @OneToMany(() => Team, (team) => team.user)
-  teams: Team[];
+  @OneToMany('Team', 'user')
+  teams: Relation<Team>[];
 
-  @OneToMany(() => Character, (character) => character.user)
-  characters: Character[];
+  @OneToMany('Character', 'user')
+  characters: Relation<Character>[];
+
+  @OneToOne('Inventory', 'user')
+  inventory: Relation<Inventory>;
 }
