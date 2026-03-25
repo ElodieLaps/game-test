@@ -4,78 +4,60 @@ import {
   Controller,
   Delete,
   Get,
-  Param,
   Post,
   Put,
   UseGuards,
 } from '@nestjs/common';
-import {
-  InventoryConsumable,
-  InventoryEquipment,
-  InventoryOwnerType,
-} from '@shared';
+import { InventoryConsumable, InventoryEquipment } from '@shared';
 import { CurrentUser } from '@users/currentUser.decorator';
 import { User } from '@users/user.entity';
 import { InventoryService } from './inventories.service';
 
 @Controller('inventory')
+@UseGuards(AuthGuard)
 export class InventoryController {
   constructor(private readonly inventoryService: InventoryService) {}
 
-  @Get(':ownerId')
-  @UseGuards(AuthGuard)
-  async getInventory(@Param('ownerId') ownerId: string) {
-    return await this.inventoryService.getInventory(ownerId);
+  @Get()
+  async getInventory(@CurrentUser() user: User) {
+    return this.inventoryService.getInventory(user.id);
   }
 
   @Post('add')
-  @UseGuards(AuthGuard)
   async addItems(
+    @CurrentUser() user: User,
     @Body()
     body: {
-      ownerId: string;
-      ownerType: InventoryOwnerType;
       equipments?: InventoryEquipment[];
       consumables?: InventoryConsumable[];
     },
   ) {
-    return await this.inventoryService.addItems(
-      body.ownerId,
-      body.ownerType,
-      body,
-    );
+    return this.inventoryService.addItems(user.id, body);
   }
 
   @Delete('remove')
   @UseGuards(AuthGuard)
   async removeItems(
+    @CurrentUser() user: User,
     @Body()
     body: {
-      ownerId: string;
       equipments?: InventoryEquipment[];
       consumables?: InventoryConsumable[];
     },
   ) {
-    return await this.inventoryService.removeItems(body.ownerId, body);
+    return await this.inventoryService.removeItems(user.id, body);
   }
 
   @Put('transfer')
-  @UseGuards(AuthGuard)
   async transfer(
+    @CurrentUser() user: User,
     @Body()
     body: {
-      fromId: string;
-      toId: string;
-      toOwnerType: InventoryOwnerType;
+      toUserId: string;
       equipments?: InventoryEquipment[];
       consumables?: InventoryConsumable[];
     },
   ) {
-    return await this.inventoryService.transfer(
-      body.fromId,
-      body.toId,
-      body.toOwnerType,
-      body,
-    );
+    return this.inventoryService.transfer(user.id, body.toUserId, body);
   }
 }

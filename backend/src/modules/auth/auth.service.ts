@@ -1,4 +1,5 @@
-import { MailService } from '@mail/mail.service';
+import { AuthBodyDto } from '@auth/auth.body.dto';
+import { MailService } from '@mails/mails.service';
 import {
   BadRequestException,
   Injectable,
@@ -7,20 +8,20 @@ import {
   UnauthorizedException,
 } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
-import { InjectRepository } from '@nestjs/typeorm';
-import { AuthBodyDto } from '@src/modules/auth/auth.body.dto';
 import { UserBodyDto } from '@users/user.body.dto';
-import { User } from '@users/user.entity';
+import type { User } from '@users/user.entity';
 import { UserService } from '@users/users.service';
 import { compare } from 'bcrypt';
 import { randomUUID } from 'crypto';
-import { Repository } from 'typeorm';
+
+type AuthUser = Omit<
+  User,
+  'password' | 'verificationToken' | 'verificationTokenExpiresAt'
+>;
 
 @Injectable()
 export class AuthService {
   constructor(
-    @InjectRepository(User)
-    private readonly userRepository: Repository<User>,
     private readonly userService: UserService,
     private readonly jwtService: JwtService,
     private readonly mailService: MailService,
@@ -33,40 +34,33 @@ export class AuthService {
     const user = await this.userService.getUserByEmail(email);
 
     if (!user) throw new NotFoundException('User not found');
-
     if (!(await this.isPasswordValid(password, user.password)))
-      throw new UnauthorizedException('User name or password is incorrect');
+      throw new UnauthorizedException('Invalid credentials');
 
-    return this.authentificateUser({ id: user.id });
+    return this.authenticateUser({ id: user.id });
   }
 
-  async getUserFromRequest(
-    id: string,
-  ): Promise<
-    Omit<User, 'password' | 'verificationToken' | 'verificationTokenExpiresAt'>
-  > {
+  async getAuthUser(id: string): Promise<AuthUser> {
     const user = await this.userService.getUserById(id);
 
-    if (!user) throw new NotFoundException('User is not found');
+    if (!user) throw new NotFoundException('User not found');
 
-    return {
-      id: user.id,
-      name: user.name,
-      email: user.email,
-      teams: user.teams,
-      characters: user.characters,
-      inventory: user.inventory,
-      isVerified: user.isVerified,
-    };
+    const {
+      password,
+      verificationToken,
+      verificationTokenExpiresAt,
+      ...authUser
+    } = user;
+    return authUser;
   }
 
   async register(body: UserBodyDto): Promise<void> {
     const user = await this.userService.createUser(body);
-    if (!user.verificationToken) {
+
+    if (!user.verificationToken)
       throw new InternalServerErrorException(
         'Failed to generate verification token',
       );
-    }
 
     await this.mailService.sendVerificationEmail(
       user.email,
@@ -84,7 +78,7 @@ export class AuthService {
       user.verificationTokenExpiresAt &&
       user.verificationTokenExpiresAt < new Date()
     ) {
-      await this.userRepository.update(user.id, {
+      await this.userService.updateUser(user.id, {
         verificationToken: null,
         verificationTokenExpiresAt: null,
       });
@@ -99,25 +93,20 @@ export class AuthService {
   }
 
   async resendVerificationEmail(email: string): Promise<void> {
-    const user = await this.userRepository.findOne({ where: { email } });
+    const user = await this.userService.getUserByEmail(email);
 
     if (!user) throw new NotFoundException('User not found');
 
     const token = randomUUID();
-    const expiresAt = new Date();
-    expiresAt.setHours(expiresAt.getHours() + 24);
+    const verificationTokenExpiresAt = new Date();
+    verificationTokenExpiresAt.setHours(
+      verificationTokenExpiresAt.getHours() + 24,
+    );
 
     await this.userService.updateUser(user.id, {
       verificationToken: token,
-      verificationTokenExpiresAt: expiresAt,
+      verificationTokenExpiresAt,
     });
-
-    const verificationUrl = `${process.env.FRONTEND_URL}/verify/${token}`;
-    await this.mailService.sendVerificationEmail(
-      user.email,
-      user.name,
-      verificationUrl,
-    );
   }
 
   private async isPasswordValid(
@@ -127,12 +116,11 @@ export class AuthService {
     return compare(password, hashedPassword);
   }
 
-  private async authentificateUser({
+  private async authenticateUser({
     id,
   }: {
     id: string;
   }): Promise<{ access_token: string }> {
-    const payload = { id };
-    return { access_token: await this.jwtService.sign(payload) };
+    return { access_token: await this.jwtService.sign({ id }) };
   }
 }

@@ -7,7 +7,7 @@ import { InventoryService } from './inventories.service';
 import { Inventory } from './inventory.entity';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Inventory, User])],
+  imports: [TypeOrmModule.forFeature([Inventory])],
   controllers: [InventoryController],
   providers: [InventoryService, JwtService],
   exports: [InventoryService],

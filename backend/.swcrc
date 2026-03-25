@@ -14,7 +14,7 @@
       "@teams/*": ["src/modules/teams/*"],
       "@inventories/*": ["src/modules/inventories/*"],
       "@users/*": ["src/modules/users/*"],
-      "@mail/*": ["src/modules/mail/*"],
+      "@mails/*": ["src/modules/mails/*"],
       "@shared": ["../shared/dist/index.js"]
     }
   }

@@ -11,7 +11,7 @@ import { InventoryModule } from '@inventories/inventories.module';
 import { MailerModule } from '@nestjs-modules/mailer';
 import { HandlebarsAdapter } from '@nestjs-modules/mailer/adapters/handlebars.adapter';
 import { join } from 'path';
-import { MailModule } from '@src/modules/mail/mail.module';
+import { MailModule } from '@src/modules/mails/mails.module';
 
 @Module({
   imports: [

@@ -13,10 +13,12 @@ export class Inventory {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @OneToOne(() => User, (user) => user.inventory, { onDelete: 'CASCADE' })
+  @OneToOne(() => User, (user) => user.inventory, {
+    nullable: false,
+  })
   @JoinColumn()
   user: User;
 
-  @Column('jsonb', { default: '{ "equipments": [], "consumables": [] }' })
+  @Column('jsonb', { default: { equipments: [], consumables: [] } })
   items: UserInventory;
 }

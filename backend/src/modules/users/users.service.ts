@@ -1,4 +1,3 @@
-import { InventoryService } from '@inventories/inventories.service';
 import {
   ConflictException,
   Injectable,
@@ -6,19 +5,18 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { TeamService } from '@src/modules/teams/teams.service';
 import { hash } from 'bcrypt';
+import { randomUUID } from 'crypto';
 import { Repository } from 'typeorm';
 import { UserBodyDto } from './user.body.dto';
 import { User } from './user.entity';
-import { randomUUID } from 'crypto';
+import { InventoryService } from '@inventories/inventories.service';
 
 @Injectable()
 export class UserService {
   constructor(
     @InjectRepository(User)
     private readonly userRepository: Repository<User>,
-    private readonly teamService: TeamService,
     private readonly inventoryService: InventoryService,
   ) {}
 
@@ -81,7 +79,7 @@ export class UserService {
       });
       const savedUser = await this.userRepository.save(user);
 
-      await this.inventoryService.getOrCreateInventory(savedUser.id, 'USER');
+      await this.inventoryService.createInventory(savedUser);
 
       return savedUser;
     } catch (error) {
@@ -92,7 +90,6 @@ export class UserService {
   async deleteUser(id: string): Promise<void> {
     const user = await this.userRepository.findOneBy({ id });
     if (!user) throw new NotFoundException('User not found');
-    await this.inventoryService.deleteInventory(id);
     await this.userRepository.remove(user);
   }
 
@@ -100,20 +97,20 @@ export class UserService {
     return await this.userRepository.findOneBy({ verificationToken: token });
   }
 
-async updateUser(id: string, data: Partial<User>): Promise<User> {
-  return this.userRepository.manager.transaction(async (manager) => {
-    if (data.password) {
-      data.password = await this.hashPassword(data.password);
-    }
+  async updateUser(id: string, data: Partial<User>): Promise<User> {
+    return this.userRepository.manager.transaction(async (manager) => {
+      if (data.password) {
+        data.password = await this.hashPassword(data.password);
+      }
 
-    await manager.update(User, id, data);
-    const user = await manager.findOneBy(User, { id });
+      await manager.update(User, id, data);
+      const user = await manager.findOneBy(User, { id });
 
-    if (!user) throw new NotFoundException('User not found');
+      if (!user) throw new NotFoundException('User not found');
 
-    return user;
-  });
-}
+      return user;
+    });
+  }
 
   private async hashPassword(password: string): Promise<string> {
     return await hash(password, 9);

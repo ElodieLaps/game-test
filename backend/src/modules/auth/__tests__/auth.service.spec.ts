@@ -1,33 +1,42 @@
-import { Test, TestingModule } from '@nestjs/testing';
+import type { AuthBodyDto } from '@auth/auth.body.dto';
 import { AuthService } from '@auth/auth.service';
-import { UserService } from '@users/users.service';
+import { MailService } from '@mails/mails.service';
+import { NotFoundException, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
-import { UnauthorizedException, NotFoundException } from '@nestjs/common';
+import { Test, TestingModule } from '@nestjs/testing';
+import { UserService } from '@users/users.service';
 import { compare } from 'bcrypt';
-import { AuthBodyDto } from '@src/modules/auth/auth.body.dto';
 
 jest.mock('bcrypt');
 
+const mockUserService = {
+  getUserByEmail: jest.fn(),
+  getUserById: jest.fn(),
+  createUser: jest.fn(),
+  updateUser: jest.fn(),
+  getUserByVerificationToken: jest.fn(),
+};
+
+const mockJwtService = {
+  sign: jest.fn(),
+};
+
+const mockMailService = {
+  sendVerificationEmail: jest.fn(),
+};
+
 describe('AuthService', () => {
   let service: AuthService;
-  let userService: Record<keyof UserService, jest.Mock>;
-  let jwtService: Record<keyof JwtService, jest.Mock>;
 
   beforeEach(async () => {
-    userService = {
-      getUserByEmail: jest.fn(),
-      getUserById: jest.fn(),
-    } as Record<keyof UserService, jest.Mock>;
-
-    jwtService = {
-      sign: jest.fn(),
-    } as Record<keyof JwtService, jest.Mock>;
+    jest.clearAllMocks();
 
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         AuthService,
-        { provide: UserService, useValue: userService },
-        { provide: JwtService, useValue: jwtService },
+        { provide: UserService, useValue: mockUserService },
+        { provide: JwtService, useValue: mockJwtService },
+        { provide: MailService, useValue: mockMailService },
       ],
     }).compile();
 
@@ -39,62 +48,140 @@ describe('AuthService', () => {
   });
 
   describe('login', () => {
-    const dto: AuthBodyDto = { email: 'test', password: 'secret' };
+    const dto: AuthBodyDto = { email: 'a@b.com', password: 'secret' };
     const user = {
       id: '1',
       name: 'test',
       password: 'hashed',
       email: 'a@b.com',
-      teams: [],
     };
 
-    it('should throw UnauthorizedException if user does not exist', async () => {
-      userService.getUserByEmail.mockResolvedValue(null);
-      await expect(service.login(dto)).rejects.toThrow(UnauthorizedException);
+    it('should throw NotFoundException if user does not exist', async () => {
+      mockUserService.getUserByEmail.mockResolvedValue(null);
+      await expect(service.login(dto)).rejects.toThrow(NotFoundException);
     });
 
     it('should throw UnauthorizedException if password is invalid', async () => {
-      userService.getUserByEmail.mockResolvedValue(user);
+      mockUserService.getUserByEmail.mockResolvedValue(user);
       (compare as jest.Mock).mockResolvedValue(false);
-
       await expect(service.login(dto)).rejects.toThrow(UnauthorizedException);
     });
 
     it('should return access_token if credentials are valid', async () => {
-      userService.getUserByEmail.mockResolvedValue(user);
+      mockUserService.getUserByEmail.mockResolvedValue(user);
       (compare as jest.Mock).mockResolvedValue(true);
-      jwtService.sign.mockReturnValue('token');
+      mockJwtService.sign.mockReturnValue('token');
 
       const result = await service.login(dto);
+
       expect(result).toEqual({ access_token: 'token' });
-      expect(jwtService.sign).toHaveBeenCalledWith({ id: user.id });
+      expect(mockJwtService.sign).toHaveBeenCalledWith({ id: user.id });
     });
   });
 
-  describe('getUserFromRequest', () => {
+  describe('getAuthUser', () => {
     const user = {
       id: '1',
       name: 'test',
       password: 'hashed',
       email: 'a@b.com',
       teams: [],
+      characters: [],
+      inventory: null,
+      isVerified: true,
+      verificationToken: null,
+      verificationTokenExpiresAt: null,
     };
 
     it('should throw NotFoundException if user not found', async () => {
-      userService.getUserById.mockResolvedValue(null);
-      await expect(service.getUserFromRequest('1')).rejects.toThrow(
+      mockUserService.getUserById.mockResolvedValue(null);
+      await expect(service.getAuthUser('1')).rejects.toThrow(NotFoundException);
+    });
+
+    it('should return user without sensitive fields', async () => {
+      mockUserService.getUserById.mockResolvedValue(user);
+
+      const result = await service.getAuthUser('1');
+
+      expect(result).not.toHaveProperty('password');
+      expect(result).not.toHaveProperty('verificationToken');
+      expect(result).not.toHaveProperty('verificationTokenExpiresAt');
+      expect(result).toMatchObject({ id: '1', name: 'test', email: 'a@b.com' });
+    });
+  });
+
+  describe('register', () => {
+    it('should call createUser and sendVerificationEmail', async () => {
+      mockUserService.createUser.mockResolvedValue({
+        email: 'a@b.com',
+        name: 'test',
+        verificationToken: 'token',
+      });
+
+      await service.register({
+        email: 'a@b.com',
+        password: 'secret',
+        name: 'test',
+      });
+
+      expect(mockUserService.createUser).toHaveBeenCalled();
+      expect(mockMailService.sendVerificationEmail).toHaveBeenCalledWith(
+        'a@b.com',
+        'test',
+        'token',
+      );
+    });
+
+    it('should throw InternalServerErrorException if no verificationToken', async () => {
+      mockUserService.createUser.mockResolvedValue({
+        email: 'a@b.com',
+        name: 'test',
+        verificationToken: null,
+      });
+
+      await expect(
+        service.register({
+          email: 'a@b.com',
+          password: 'secret',
+          name: 'test',
+        }),
+      ).rejects.toThrow();
+    });
+  });
+
+  describe('verifyEmail', () => {
+    it('should throw NotFoundException if user not found', async () => {
+      mockUserService.getUserByVerificationToken.mockResolvedValue(null);
+      await expect(service.verifyEmail('token')).rejects.toThrow(
         NotFoundException,
       );
     });
 
-    it('should return user data without password', async () => {
-      userService.getUserById.mockResolvedValue(user);
-      const result = await service.getUserFromRequest('1');
-      expect(result).toEqual({
-        id: user.id,
-        name: user.name,
-        email: user.email,
-        teams: user.teams,
+    it('should throw BadRequestException if token is expired', async () => {
+      mockUserService.getUserByVerificationToken.mockResolvedValue({
+        id: '1',
+        verificationTokenExpiresAt: new Date('2000-01-01'),
+      });
+
+      await expect(service.verifyEmail('token')).rejects.toThrow();
+      expect(mockUserService.updateUser).toHaveBeenCalledWith('1', {
+        verificationToken: null,
+        verificationTokenExpiresAt: null,
+      });
+    });
+
+    it('should verify user if token is valid', async () => {
+      mockUserService.getUserByVerificationToken.mockResolvedValue({
+        id: '1',
+        verificationTokenExpiresAt: new Date(Date.now() + 10000),
+      });
+
+      await service.verifyEmail('token');
+
+      expect(mockUserService.updateUser).toHaveBeenCalledWith('1', {
+        isVerified: true,
+        verificationToken: null,
+        verificationTokenExpiresAt: null,
       });
     });
   });
