@@ -4,8 +4,7 @@ import { UserService } from '@users/users.service';
 import { User } from '@users/user.entity';
 import { UserBodyDto } from '@src/modules/users/user.body.dto';
 import { UserInterceptor } from '@users/users.interceptor';
-import { ExecutionContext, CallHandler } from '@nestjs/common';
-import { firstValueFrom, of } from 'rxjs';
+import { AuthGuard } from '@auth/auth.guard';
 
 describe('UserController', () => {
   let controller: UserController;
@@ -15,6 +14,7 @@ describe('UserController', () => {
     getAllUsers: jest.fn(),
     getUserById: jest.fn(),
     createUser: jest.fn(),
+    deleteUser: jest.fn(),
   };
 
   beforeEach(async () => {
@@ -26,10 +26,22 @@ describe('UserController', () => {
           useValue: mockUserService,
         },
       ],
-    }).compile();
+    })
+      .overrideGuard(AuthGuard)
+      .useValue({ canActivate: () => true })
+      .overrideInterceptor(UserInterceptor)
+      .useValue({
+        intercept: (_: unknown, next: { handle: () => unknown }) =>
+          next.handle(),
+      })
+      .compile();
 
     controller = module.get<UserController>(UserController);
     service = module.get<UserService>(UserService);
+  });
+
+  afterEach(() => {
+    jest.clearAllMocks();
   });
 
   it('controller should be defined', () => {
@@ -42,42 +54,31 @@ describe('UserController', () => {
 
   describe('getAllUsers', () => {
     it('should return an array of users', async () => {
-      const users: User[] = [
-        {
-          id: '1',
-          name: 'Alice',
-          email: 'a@b.com',
-          password: 'hashed',
-          teams: [],
-        },
-        {
-          id: '2',
-          name: 'Bob',
-          email: 'b@c.com',
-          password: 'hashed',
-          teams: [],
-        },
+      const users: Partial<User>[] = [
+        { id: '1', name: 'Alice', email: 'a@b.com', password: 'hashed' },
+        { id: '2', name: 'Bob', email: 'b@c.com', password: 'hashed' },
       ];
       mockUserService.getAllUsers.mockResolvedValue(users);
 
       const result = await controller.getAllUsers();
+
       expect(result).toEqual(users);
-      expect(mockUserService.getAllUsers).toHaveBeenCalled();
+      expect(mockUserService.getAllUsers).toHaveBeenCalledTimes(1);
     });
   });
 
   describe('getUserById', () => {
     it('should return a single user', async () => {
-      const user: User = {
+      const user: Partial<User> = {
         id: '1',
         name: 'Alice',
         email: 'a@b.com',
         password: 'hashed',
-        teams: [],
       };
       mockUserService.getUserById.mockResolvedValue(user);
 
       const result = await controller.getUserById('1');
+
       expect(result).toEqual(user);
       expect(mockUserService.getUserById).toHaveBeenCalledWith('1');
     });
@@ -90,12 +91,24 @@ describe('UserController', () => {
         email: 'c@d.com',
         password: 'secret',
       };
-      const user: User = { id: '3', ...dto, password: 'hashed', teams: [] };
-      mockUserService.createUser.mockResolvedValue(user);
+      const created: Partial<User> = { id: '3', ...dto, password: 'hashed' };
+      mockUserService.createUser.mockResolvedValue(created);
 
       const result = await controller.createUser(dto);
-      expect(result).toEqual(user);
+
+      expect(result).toEqual(created);
       expect(mockUserService.createUser).toHaveBeenCalledWith(dto);
+    });
+  });
+
+  describe('deleteUser', () => {
+    it('should delete a user and return void', async () => {
+      mockUserService.deleteUser.mockResolvedValue(undefined);
+
+      const result = await controller.deleteUser('1');
+
+      expect(result).toBeUndefined();
+      expect(mockUserService.deleteUser).toHaveBeenCalledWith('1');
     });
   });
 });

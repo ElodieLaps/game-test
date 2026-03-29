@@ -3,6 +3,7 @@ import {
   Controller,
   Delete,
   Get,
+  HttpCode,
   Param,
   Post,
   UseGuards,
@@ -19,24 +20,27 @@ export class UserController {
   constructor(private readonly userService: UserService) {}
 
   @Get('all')
+  @UseGuards(AuthGuard)
   @UseInterceptors(UserInterceptor)
   async getAllUsers(): Promise<User[]> {
     return this.userService.getAllUsers();
   }
 
   @Get(':id')
+  @UseGuards(AuthGuard)
   async getUserById(@Param('id') id: string): Promise<User> {
     return this.userService.getUserById(id);
   }
 
   @Post()
-  async createUser(@Body() user: UserBodyDto) {
-    return await this.userService.createUser(user);
+  async createUser(@Body() userBodyDto: UserBodyDto): Promise<User> {
+    return this.userService.createUser(userBodyDto);
   }
 
   @Delete(':id')
   @UseGuards(AuthGuard)
-  async deleteUser(@Param('id') id: string) {
-    return await this.userService.deleteUser(id);
+  @HttpCode(204)
+  async deleteUser(@Param('id') id: string): Promise<void> {
+    return this.userService.deleteUser(id);
   }
 }

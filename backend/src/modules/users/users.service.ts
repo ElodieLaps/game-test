@@ -7,7 +7,7 @@ import {
 import { InjectRepository } from '@nestjs/typeorm';
 import { hash } from 'bcrypt';
 import { randomUUID } from 'crypto';
-import { Repository } from 'typeorm';
+import { Repository, EntityManager } from 'typeorm';
 import { UserBodyDto } from './user.body.dto';
 import { User } from './user.entity';
 import { InventoryService } from '@inventories/inventories.service';
@@ -20,50 +20,54 @@ export class UserService {
     private readonly inventoryService: InventoryService,
   ) {}
 
+  /**
+   * Retrieves all users.
+   */
   async getAllUsers(): Promise<User[]> {
-    try {
-      return await this.userRepository.find();
-    } catch (error) {
-      console.error('Error getting all users:', error);
-      throw error;
-    }
+    return this.userRepository.find();
   }
 
+  /**
+   * Retrieves a user by their ID.
+   * @throws {NotFoundException} If the user is not found.
+   */
   async getUserById(id: string): Promise<User> {
     const user = await this.userRepository.findOneBy({ id });
     if (!user) throw new NotFoundException('User not found');
     return user;
   }
 
+  /**
+   * Retrieves a user by their name.
+   * @throws {NotFoundException} If the user is not found.
+   */
   async getUserByName(name: string): Promise<User> {
-    try {
-      const user = await this.userRepository.findOneBy({ name });
-      if (!user) {
-        throw new Error('User not found');
-      }
-      return user;
-    } catch (error) {
-      throw new Error('Error getting user by name');
-    }
-  }
-
-  async getUserByEmail(email: string): Promise<User> {
-    const user = await this.userRepository.findOneBy({ email });
-    if (!user) {
-      throw new NotFoundException('User not found');
-    }
+    const user = await this.userRepository.findOneBy({ name });
+    if (!user) throw new NotFoundException('User not found');
     return user;
   }
 
-  async createUser(userBodyDto: UserBodyDto): Promise<User> {
-    const existingUser = await this.userRepository.findOne({
-      where: { email: userBodyDto.email },
-    });
+  /**
+   * Retrieves a user by their email.
+   * @throws {NotFoundException} If the user is not found.
+   */
+  async getUserByEmail(email: string): Promise<User> {
+    const user = await this.userRepository.findOneBy({ email });
+    if (!user) throw new NotFoundException('User not found');
+    return user;
+  }
 
+  /**
+   * Creates a new user.
+   * @throws {ConflictException} If a user with this email already exists.
+   * @throws {InternalServerErrorException} If there is an error during creation.
+   */
+  async createUser(userBodyDto: UserBodyDto): Promise<User> {
+    const existingUser = await this.userRepository.findOneBy({
+      email: userBodyDto.email,
+    });
     if (existingUser) {
-      throw new ConflictException(
-        'An account with this email is already exist',
-      );
+      throw new ConflictException('An account with this email already exists');
     }
 
     try {
@@ -77,8 +81,8 @@ export class UserService {
         verificationToken: randomUUID(),
         verificationTokenExpiresAt: expiresAt,
       });
-      const savedUser = await this.userRepository.save(user);
 
+      const savedUser = await this.userRepository.save(user);
       await this.inventoryService.createInventory(savedUser);
 
       return savedUser;
@@ -87,18 +91,29 @@ export class UserService {
     }
   }
 
+  /**
+   * Deletes a user by their ID.
+   * @throws {NotFoundException} If the user is not found.
+   */
   async deleteUser(id: string): Promise<void> {
-    const user = await this.userRepository.findOneBy({ id });
-    if (!user) throw new NotFoundException('User not found');
+    const user = await this.getUserById(id);
     await this.userRepository.remove(user);
   }
 
+  /**
+   * Retrieves a user by their verification token.
+   * @returns {Promise<User | null>} The user or null if not found.
+   */
   async getUserByVerificationToken(token: string): Promise<User | null> {
-    return await this.userRepository.findOneBy({ verificationToken: token });
+    return this.userRepository.findOneBy({ verificationToken: token });
   }
 
+  /**
+   * Updates a user.
+   * @throws {NotFoundException} If the user is not found.
+   */
   async updateUser(id: string, data: Partial<User>): Promise<User> {
-    return this.userRepository.manager.transaction(async (manager) => {
+    return this.userRepository.manager.transaction(async (manager: EntityManager) => {
       if (data.password) {
         data.password = await this.hashPassword(data.password);
       }
@@ -107,12 +122,14 @@ export class UserService {
       const user = await manager.findOneBy(User, { id });
 
       if (!user) throw new NotFoundException('User not found');
-
       return user;
     });
   }
 
+  /**
+   * Hashes a password.
+   */
   private async hashPassword(password: string): Promise<string> {
-    return await hash(password, 9);
+    return hash(password, 9);
   }
 }
