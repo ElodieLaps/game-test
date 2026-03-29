@@ -27,7 +27,7 @@ export class TeamService {
         userId,
         characters: [],
       });
-      await this.inventoryService.getOrCreateInventory(newTeam.id, 'TEAM');
+      await this.inventoryService.getInventory(newTeam.id);
       return await this.teamRepository.save(newTeam);
     } catch (error) {
       throw new Error('Error creating team');
@@ -44,15 +44,8 @@ export class TeamService {
     const teamInventory = await this.inventoryService.getInventory(teamId);
 
     if (teamInventory) {
-      await this.inventoryService.transfer(
-        teamId,
-        userId,
-        'USER',
-        teamInventory.items,
-      );
+      await this.inventoryService.transfer(teamId, userId, teamInventory.items);
     }
-
-    await this.inventoryService.deleteInventory(teamId);
     await this.teamRepository.remove(team);
   }
 
