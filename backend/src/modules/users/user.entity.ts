@@ -33,12 +33,12 @@ export class User {
   @Column({ type: 'timestamp', nullable: true, default: null })
   verificationTokenExpiresAt: Date | null;
 
-  @OneToMany('Team', 'user')
+  @OneToMany('Team', 'user', { cascade: true, onDelete: 'CASCADE' })
   teams: Relation<Team>[];
 
-  @OneToMany('Character', 'user')
+  @OneToMany('Character', 'user', { cascade: true, onDelete: 'CASCADE' })
   characters: Relation<Character>[];
 
-  @OneToOne('Inventory', 'user')
+  @OneToOne('Inventory', 'user', { cascade: true, onDelete: 'CASCADE' })
   inventory: Relation<Inventory>;
 }

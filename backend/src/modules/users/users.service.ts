@@ -21,13 +21,6 @@ export class UserService {
   ) {}
 
   /**
-   * Retrieves all users.
-   */
-  async getAllUsers(): Promise<User[]> {
-    return this.userRepository.find();
-  }
-
-  /**
    * Retrieves a user by their ID.
    * @throws {NotFoundException} If the user is not found.
    */
@@ -113,17 +106,19 @@ export class UserService {
    * @throws {NotFoundException} If the user is not found.
    */
   async updateUser(id: string, data: Partial<User>): Promise<User> {
-    return this.userRepository.manager.transaction(async (manager: EntityManager) => {
-      if (data.password) {
-        data.password = await this.hashPassword(data.password);
-      }
+    return this.userRepository.manager.transaction(
+      async (manager: EntityManager) => {
+        if (data.password) {
+          data.password = await this.hashPassword(data.password);
+        }
 
-      await manager.update(User, id, data);
-      const user = await manager.findOneBy(User, { id });
+        await manager.update(User, id, data);
+        const user = await manager.findOneBy(User, { id });
 
-      if (!user) throw new NotFoundException('User not found');
-      return user;
-    });
+        if (!user) throw new NotFoundException('User not found');
+        return user;
+      },
+    );
   }
 
   /**

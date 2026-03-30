@@ -59,24 +59,6 @@ describe('UserService', () => {
     expect(service).toBeDefined();
   });
 
-  describe('getAllUsers', () => {
-    it('should return all users', async () => {
-      const users = [
-        {
-          id: '1',
-          name: 'Alice',
-          email: 'a@b.com',
-          password: 'hashed',
-        },
-      ];
-      mockRepo.find.mockResolvedValue(users);
-
-      const result = await service.getAllUsers();
-      expect(result).toEqual(users);
-      expect(mockRepo.find).toHaveBeenCalled();
-    });
-  });
-
   describe('getUserById', () => {
     it('should return user if found', async () => {
       const user = {

@@ -3,16 +3,13 @@
 @characterId1 = 
 @characterId2 = 
 @teamId = 07a107f8-7546-46c1-a1b0-a04258ae3037
-@userId = 64f687a8-6c21-492b-92cb-a779fee9e9bf
+@userId = a8196647-973c-4d14-910f-deb056c4dd30
 @email = elo@gmail.com
 
 ### HEALTH CHECK ###
 GET http://localhost:3000/
 
 ### USER ###
-
-### all users
-GET http://localhost:3000/user/all
 
 ### user by id
 GET http://localhost:3000/user/{{userId}}

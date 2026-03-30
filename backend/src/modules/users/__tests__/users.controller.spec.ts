@@ -3,7 +3,7 @@ import { UserController } from '@users/users.controller';
 import { UserService } from '@users/users.service';
 import { User } from '@users/user.entity';
 import { UserBodyDto } from '@src/modules/users/user.body.dto';
-import { UserInterceptor } from '@users/users.interceptor';
+import { UsersInterceptor } from '@users/users.interceptor';
 import { AuthGuard } from '@auth/auth.guard';
 
 describe('UserController', () => {
@@ -29,7 +29,7 @@ describe('UserController', () => {
     })
       .overrideGuard(AuthGuard)
       .useValue({ canActivate: () => true })
-      .overrideInterceptor(UserInterceptor)
+      .overrideInterceptor(UsersInterceptor)
       .useValue({
         intercept: (_: unknown, next: { handle: () => unknown }) =>
           next.handle(),
@@ -50,21 +50,6 @@ describe('UserController', () => {
 
   it('service should be defined', () => {
     expect(service).toBeDefined();
-  });
-
-  describe('getAllUsers', () => {
-    it('should return an array of users', async () => {
-      const users: Partial<User>[] = [
-        { id: '1', name: 'Alice', email: 'a@b.com', password: 'hashed' },
-        { id: '2', name: 'Bob', email: 'b@c.com', password: 'hashed' },
-      ];
-      mockUserService.getAllUsers.mockResolvedValue(users);
-
-      const result = await controller.getAllUsers();
-
-      expect(result).toEqual(users);
-      expect(mockUserService.getAllUsers).toHaveBeenCalledTimes(1);
-    });
   });
 
   describe('getUserById', () => {

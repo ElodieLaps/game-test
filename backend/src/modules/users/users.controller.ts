@@ -1,3 +1,4 @@
+import { AuthGuard } from '@auth/auth.guard';
 import {
   Body,
   Controller,
@@ -11,28 +12,22 @@ import {
 } from '@nestjs/common';
 import { UserBodyDto } from '@src/modules/users/user.body.dto';
 import { User } from '@users/user.entity';
-import { UserInterceptor } from '@users/users.interceptor';
 import { UserService } from '@users/users.service';
-import { AuthGuard } from '@auth/auth.guard';
+import { UsersInterceptor } from '@users/users.interceptor';
 
 @Controller('user')
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
-  @Get('all')
-  @UseGuards(AuthGuard)
-  @UseInterceptors(UserInterceptor)
-  async getAllUsers(): Promise<User[]> {
-    return this.userService.getAllUsers();
-  }
-
   @Get(':id')
   @UseGuards(AuthGuard)
+  @UseInterceptors(UsersInterceptor)
   async getUserById(@Param('id') id: string): Promise<User> {
     return this.userService.getUserById(id);
   }
 
   @Post()
+  @UseInterceptors(UsersInterceptor)
   async createUser(@Body() userBodyDto: UserBodyDto): Promise<User> {
     return this.userService.createUser(userBodyDto);
   }
