@@ -1,13 +1,9 @@
-import {
-  BadRequestException,
-  Injectable,
-  NotFoundException,
-} from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { InventoryConsumable, InventoryEquipment } from '@shared';
+import { User } from '@users/user.entity';
 import { Repository } from 'typeorm';
 import { Inventory } from './inventory.entity';
-import { User } from '@users/user.entity';
 
 @Injectable()
 export class InventoryService {
@@ -19,7 +15,13 @@ export class InventoryService {
   async createInventory(user: User): Promise<Inventory> {
     const inventory = this.inventoryRepository.create({
       user,
-      items: { equipments: [], consumables: [] },
+      items: {
+        equipments: [],
+        consumables: [
+          { name: 'HEALING_POTION', quantity: 5 },
+          { name: 'MANA_POTION', quantity: 3 },
+        ],
+      },
     });
     return this.inventoryRepository.save(inventory);
   }

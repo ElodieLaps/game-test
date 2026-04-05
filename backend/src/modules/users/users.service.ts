@@ -69,6 +69,7 @@ export class UserService {
 
       const user = this.userRepository.create({
         ...userBodyDto,
+        golds: 180,
         password: await this.hashPassword(userBodyDto.password),
         isVerified: false,
         verificationToken: randomUUID(),

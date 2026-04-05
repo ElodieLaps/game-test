@@ -41,4 +41,7 @@ export class User {
 
   @OneToOne('Inventory', 'user', { cascade: true, onDelete: 'CASCADE' })
   inventory: Relation<Inventory>;
+
+  @Column({ nullable: true, default: 0 })
+  golds: number;
 }
