@@ -85,7 +85,13 @@ describe('InventoryService', () => {
 
       expect(mockInventoryRepository.create).toHaveBeenCalledWith({
         user: mockUser,
-        items: { equipments: [], consumables: [] },
+        items: {
+          equipments: [],
+          consumables: [
+            { name: 'HEALING_POTION', quantity: 5 },
+            { name: 'MANA_POTION', quantity: 3 },
+          ],
+        },
       });
       expect(mockInventoryRepository.save).toHaveBeenCalledWith(mockInventory);
       expect(result).toEqual(mockInventory);
